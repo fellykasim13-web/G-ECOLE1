@@ -2,299 +2,340 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Gestion Scolaire Pro</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>School Manager Pro</title>
 
 <style>
-*{box-sizing:border-box;}
-
 body{
-    margin:0;
-    font-family:Arial;
-    background:linear-gradient(135deg,#0f172a,#1e3a8a);
-    color:white;
+  margin:0;
+  font-family:Arial;
+  background:linear-gradient(135deg,#0f172a,#1e293b);
+  color:white;
+  transition:0.3s;
 }
 
-/* HEADER */
-header{
-    text-align:center;
-    padding:15px;
-    font-size:20px;
-    font-weight:bold;
-    background:rgba(0,0,0,0.4);
+body.directeur{
+  background:linear-gradient(135deg,#0b3d2e,#14532d);
 }
 
-/* BACK */
-#backBtn{
-    position:fixed;
-    top:10px;
-    left:10px;
-    padding:8px 12px;
-    border:none;
-    border-radius:8px;
-    background:#ef4444;
-    color:white;
-    display:none;
-    z-index:999;
+body.enseignant{
+  background:linear-gradient(135deg,#1e1b4b,#312e81);
 }
 
-/* CONTAINER */
-.container{
-    max-width:750px;
-    margin:auto;
-    padding:15px;
+#loader{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:#000000aa;
+  justify-content:center;
+  align-items:center;
+  z-index:999;
 }
 
-/* CARD */
-.card{
-    background:rgba(255,255,255,0.08);
-    padding:12px;
-    margin:10px 0;
-    border-radius:12px;
+.spinner{
+  width:45px;height:45px;
+  border:5px solid #ccc;
+  border-top:5px solid #38bdf8;
+  border-radius:50%;
+  animation:spin 1s linear infinite;
 }
 
-/* INPUT */
-input{
-    width:100%;
-    padding:10px;
-    margin:5px 0;
-    border:none;
-    border-radius:10px;
+@keyframes spin{100%{transform:rotate(360deg);}}
+
+section{
+  display:none;
+  text-align:center;
+  padding:40px 20px;
 }
 
-/* BUTTON */
+.show{display:block;}
+
 button{
-    width:100%;
-    padding:10px;
-    margin:5px 0;
-    border:none;
-    border-radius:10px;
-    cursor:pointer;
+  padding:12px 18px;
+  margin:6px;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
 }
 
-.green{background:#22c55e;color:white;}
-.blue{background:#3b82f6;color:white;}
-.orange{background:#f59e0b;color:black;}
+.primary{background:#38bdf8;color:white;}
+.secondary{background:#1e40af;color:white;}
+.back{background:transparent;border:1px solid white;color:white;}
 
-.hidden{display:none;}
+input{
+  padding:10px;
+  width:80%;
+  max-width:320px;
+  margin:5px;
+  border:none;
+  border-radius:6px;
+}
 
+.card{
+  background:rgba(255,255,255,0.06);
+  padding:15px;
+  margin:10px auto;
+  max-width:420px;
+  border-radius:10px;
+}
+
+.item{
+  background:rgba(255,255,255,0.1);
+  margin:5px;
+  padding:8px;
+  border-radius:6px;
+  display:flex;
+  justify-content:space-between;
+}
 </style>
 </head>
 
 <body>
 
-<header>📚 Gestion Scolaire PRO</header>
+<div id="loader"><div class="spinner"></div></div>
 
-<button id="backBtn" onclick="goHome()">⬅ Retour</button>
+<section id="accueil" class="show">
+  <h1>📚 School Manager Pro</h1>
+  <button class="primary" onclick="start(1)">Nouvelle école</button>
+  <button class="secondary" onclick="start(2)">Connexion</button>
+</section>
 
-<div class="container">
+<section id="roles">
+  <h2>Choisir rôle</h2>
+  <button class="primary" onclick="openForm('directeur')">Directeur</button>
+  <button class="secondary" onclick="openForm('enseignant')">Enseignant</button>
+  <button class="back" onclick="back()">Retour</button>
+</section>
 
-<!-- HOME -->
-<div id="home">
+<section id="directeur">
+  <h2>Créer école</h2>
+  <input placeholder="Nom école">
+  <input placeholder="Nom directeur">
+  <input placeholder="ID école">
+  <input type="password" placeholder="Mot de passe">
+  <button class="primary" onclick="creerEcole()">Créer</button>
+  <button class="back" onclick="back()">Retour</button>
+</section>
 
-    <h3>Choisir un mode</h3>
+<section id="enseignant">
+  <h2>Créer enseignant</h2>
+  <input id="ensNom" placeholder="Nom">
+  <input id="ensMdp" type="password" placeholder="Mot de passe">
+  <input id="ensEcole" placeholder="ID école">
+  <button class="secondary" onclick="creerEnseignant()">Créer</button>
+  <button class="back" onclick="back()">Retour</button>
+</section>
 
-    <button class="blue" onclick="openParent()">👪 Mode Parent</button>
-    <button class="green" onclick="openAdmin()">👨‍🏫 Mode Directeur</button>
+<section id="login">
+  <h2>Connexion</h2>
+  <input placeholder="ID école">
+  <input placeholder="ID classe">
+  <input type="password" placeholder="Mot de passe">
+  <button class="primary" onclick="login()">Connexion</button>
+  <button class="back" onclick="back()">Retour</button>
+</section>
 
-</div>
+<section id="dashboard">
 
-<!-- ADMIN -->
-<div id="admin" class="hidden">
+  <h2>Dashboard</h2>
+  <p id="mode"></p>
+  <p id="userInfo"></p>
 
-    <h3>👨‍🏫 Directeur</h3>
+  <div class="card">
+    <h3>Élèves</h3>
+    <input id="nomEleve" placeholder="Nom">
+    <input id="classeEleve" placeholder="Classe">
+    <button onclick="addEleve()">Ajouter</button>
+    <div id="listEleves"></div>
+  </div>
 
-    <input id="nom" placeholder="Nom élève">
-    <input id="classe" placeholder="Classe">
+  <div class="card" id="ensCard">
+    <h3>Enseignants</h3>
+    <input id="nomEns" placeholder="Nom">
+    <button onclick="addEns()">Ajouter</button>
+    <div id="listEns"></div>
+  </div>
 
-    <input id="math" placeholder="Note Math">
-    <input id="fr" placeholder="Note Français">
-    <input id="sc" placeholder="Note Science">
+  <button class="back" onclick="back()">Déconnexion</button>
 
-    <button class="green" onclick="add()">Ajouter élève</button>
-    <button class="blue" onclick="show()">Afficher élèves</button>
-
-    <div id="list"></div>
-
-</div>
-
-<!-- PARENT -->
-<div id="parent" class="hidden">
-
-    <h3>👪 Mode Parent</h3>
-
-    <input id="search" placeholder="ID élève (ex: E1)">
-
-    <button class="blue" onclick="search()">Rechercher</button>
-
-    <div id="result"></div>
-
-</div>
-
-</div>
+</section>
 
 <script>
 
-/* DATA */
-let data = JSON.parse(localStorage.getItem("eleves")) || [];
+let db = JSON.parse(localStorage.getItem("db")) || {};
+let currentSchool = null;
+let role = "";
+let currentUser = "";
 
-/* NAV */
-function showBack(v){
-    document.getElementById("backBtn").style.display = v ? "block" : "none";
+function show(id){
+  document.querySelectorAll("section").forEach(s=>s.classList.remove("show"));
+  document.getElementById(id).classList.add("show");
 }
 
-function goHome(){
-    hideAll();
-    document.getElementById("home").style.display="block";
-    showBack(false);
+function load(){document.getElementById("loader").style.display="flex";}
+function unload(){document.getElementById("loader").style.display="none";}
+
+function start(t){
+  load();
+  setTimeout(()=>{
+    unload();
+    show(t===1?"roles":"login");
+  },500);
 }
 
-function hideAll(){
-    document.getElementById("home").style.display="none";
-    document.getElementById("admin").style.display="none";
-    document.getElementById("parent").style.display="none";
+function openForm(r){show(r);}
+function back(){show("accueil");}
+
+function saveDB(){
+  localStorage.setItem("db",JSON.stringify(db));
 }
 
-/* OPEN */
-function openParent(){
-    hideAll();
-    document.getElementById("parent").style.display="block";
-    showBack(true);
+function creerEcole(){
+
+  let i=document.querySelectorAll("#directeur input");
+
+  if([...i].some(x=>!x.value)) return alert("Remplis tout");
+
+  let id=i[2].value;
+  let idClasse="D"+Math.floor(Math.random()*9000)+"R";
+
+  db[id]={
+    info:{
+      nom:i[0].value,
+      directeur:i[1].value,
+      mdp:i[3].value,
+      idClasse:idClasse
+    },
+    eleves:[],
+    enseignants:[]
+  };
+
+  saveDB();
+
+  alert("École créée\nID: "+id+"\nClasse: "+idClasse);
+
+  show("login");
 }
 
-function openAdmin(){
-    hideAll();
-    document.getElementById("admin").style.display="block";
-    showBack(true);
+function creerEnseignant(){
+
+  let nom=document.getElementById("ensNom").value;
+  let mdp=document.getElementById("ensMdp").value;
+  let idEcole=document.getElementById("ensEcole").value;
+
+  if(!nom || !mdp || !idEcole) return alert("Remplis tout");
+  if(!db[idEcole]) return alert("École introuvable");
+
+  db[idEcole].enseignants.push({
+    nom,
+    mdp,
+    idEcole
+  });
+
+  saveDB();
+
+  currentSchool=idEcole;
+  currentUser=nom;
+
+  show("login");
 }
 
-/* ADD */
-function add(){
+function login(){
 
-    let n = document.getElementById("nom").value.trim();
-    let c = document.getElementById("classe").value.trim();
+  let i=document.querySelectorAll("#login input");
 
-    let m = parseFloat(document.getElementById("math").value) || 0;
-    let f = parseFloat(document.getElementById("fr").value) || 0;
-    let s = parseFloat(document.getElementById("sc").value) || 0;
+  let idE=i[0].value;
+  let idC=i[1].value;
+  let mdp=i[2].value;
 
-    if(!n || !c){
-        alert("Remplis nom et classe !");
-        return;
+  let school=db[idE];
+
+  if(!school) return alert("École introuvable");
+
+  load();
+
+  setTimeout(()=>{
+
+    unload();
+
+    if(idC===school.info.idClasse && mdp===school.info.mdp){
+      currentSchool=idE;
+      role="directeur";
+      currentUser=school.info.directeur;
+      openDashboard();
+      return;
     }
 
-    let moy = ((m+f+s)/3).toFixed(2);
+    let ens=school.enseignants.find(e=>e.mdp===mdp && e.idEcole===idE);
 
-    let id = "E" + (data.length + 1);
+    if(ens){
+      currentSchool=idE;
+      role="enseignant";
+      currentUser=ens.nom;
+      openDashboard();
+      return;
+    }
 
-    data.push({
-        id:id,
-        nom:n,
-        classe:c,
-        math:m,
-        fr:f,
-        sc:s,
-        moy:moy
+    alert("Erreur connexion");
+
+  },500);
+}
+
+function openDashboard(){
+  show("dashboard");
+  document.body.className=role;
+  document.getElementById("mode").innerText=role;
+  document.getElementById("userInfo").innerText="Connecté : "+currentUser;
+  render();
+  if(role!=="directeur"){
+    document.getElementById("ensCard").style.display="none";
+  }else{
+    document.getElementById("ensCard").style.display="block";
+  }
+}
+
+function addEleve(){
+
+  if(role!=="directeur") return;
+
+  db[currentSchool].eleves.push({
+    nom:nomEleve.value,
+    classe:classeEleve.value
+  });
+
+  saveDB();
+  render();
+}
+
+function addEns(){
+
+  if(role!=="directeur") return;
+
+  db[currentSchool].enseignants.push({
+    nom:nomEns.value
+  });
+
+  saveDB();
+  render();
+}
+
+function render(){
+
+  let e=document.getElementById("listEleves");
+  let t=document.getElementById("listEns");
+
+  e.innerHTML="";
+  t.innerHTML="";
+
+  db[currentSchool].eleves.forEach(x=>{
+    e.innerHTML+=`<div class="item">${x.nom}-${x.classe}</div>`;
+  });
+
+  if(role==="directeur"){
+    db[currentSchool].enseignants.forEach(x=>{
+      t.innerHTML+=`<div class="item">${x.nom}</div>`;
     });
-
-    localStorage.setItem("eleves", JSON.stringify(data));
-
-    alert("Élève ajouté avec ID: " + id);
-}
-
-/* SHOW ADMIN */
-function show(){
-
-    let box = document.getElementById("list");
-    box.innerHTML="";
-
-    if(data.length === 0){
-        box.innerHTML="<div class='card'>Aucun élève</div>";
-        return;
-    }
-
-    data.forEach(e=>{
-        box.innerHTML += `
-        <div class="card">
-            🆔 ${e.id}<br>
-            👤 ${e.nom}<br>
-            📘 ${e.classe}<br>
-            🧮 Moyenne: ${e.moy}<br>
-        </div>
-        `;
-    });
-}
-
-/* SEARCH PARENT */
-function search(){
-
-    let id = document.getElementById("search").value.trim().toUpperCase();
-
-    let found = data.find(e => e.id === id);
-
-    let result = document.getElementById("result");
-    result.innerHTML="";
-
-    if(!found){
-        result.innerHTML="<div class='card'>Aucun élève trouvé</div>";
-        return;
-    }
-
-    result.innerHTML=`
-    <div class="card">
-        🆔 ${found.id}<br>
-        👤 ${found.nom}<br>
-        📘 ${found.classe}<br>
-        🧮 Moyenne: ${found.moy}<br>
-
-        Math: ${found.math}<br>
-        Français: ${found.fr}<br>
-        Science: ${found.sc}<br>
-
-        <button onclick="exportPDF('${found.id}')">📄 Export PDF</button>
-    </div>
-    `;
-}
-
-/* EXPORT PDF */
-function exportPDF(id){
-
-    let e = data.find(x => x.id === id);
-
-    let w = window.open("", "_blank");
-
-    w.document.write(`
-    <html>
-    <head>
-        <title>Fiche élève</title>
-        <style>
-            body{font-family:Arial;padding:20px;}
-            h2{text-align:center;}
-            .box{border:1px solid #000;padding:10px;border-radius:10px;}
-        </style>
-    </head>
-    <body>
-        <h2>📄 Fiche élève</h2>
-
-        <div class="box">
-            🆔 ${e.id}<br>
-            👤 ${e.nom}<br>
-            📘 ${e.classe}<br><br>
-
-            Math: ${e.math}<br>
-            Français: ${e.fr}<br>
-            Science: ${e.sc}<br><br>
-
-            🧮 Moyenne: ${e.moy}
-        </div>
-
-        <script>
-            window.print();
-        <\/script>
-    </body>
-    </html>
-    `);
-
-    w.document.close();
+  }
 }
 
 </script>
