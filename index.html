@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>School Manager Pro</title>
+<title>School Manager Pro Online</title>
 
 <style>
 body{
@@ -45,14 +45,14 @@ body.enseignant{
 section{
   display:none;
   text-align:center;
-  padding:40px 20px;
+  padding:30px 15px;
 }
 
 .show{display:block;}
 
 button{
-  padding:12px 18px;
-  margin:6px;
+  padding:10px 16px;
+  margin:5px;
   border:none;
   border-radius:8px;
   cursor:pointer;
@@ -63,17 +63,17 @@ button{
 .back{background:transparent;border:1px solid white;color:white;}
 
 input{
-  padding:10px;
-  width:80%;
+  padding:8px;
+  width:85%;
   max-width:320px;
-  margin:5px;
+  margin:4px;
   border:none;
   border-radius:6px;
 }
 
 .card{
   background:rgba(255,255,255,0.06);
-  padding:15px;
+  padding:12px;
   margin:10px auto;
   max-width:420px;
   border-radius:10px;
@@ -81,12 +81,14 @@ input{
 
 .item{
   background:rgba(255,255,255,0.1);
-  margin:5px;
+  margin:4px;
   padding:8px;
   border-radius:6px;
   display:flex;
   justify-content:space-between;
+  cursor:pointer;
 }
+
 </style>
 </head>
 
@@ -95,248 +97,284 @@ input{
 <div id="loader"><div class="spinner"></div></div>
 
 <section id="accueil" class="show">
-  <h1>📚 School Manager Pro</h1>
-  <button class="primary" onclick="start(1)">Nouvelle école</button>
-  <button class="secondary" onclick="start(2)">Connexion</button>
+<h1>📚 School Manager Pro</h1>
+<button class="primary" onclick="start(1)">Nouvelle école</button>
+<button class="secondary" onclick="start(2)">Connexion</button>
 </section>
 
 <section id="roles">
-  <h2>Choisir rôle</h2>
-  <button class="primary" onclick="openForm('directeur')">Directeur</button>
-  <button class="secondary" onclick="openForm('enseignant')">Enseignant</button>
-  <button class="back" onclick="back()">Retour</button>
+<h2>Choisir rôle</h2>
+<button class="primary" onclick="openForm('directeur')">Directeur</button>
+<button class="secondary" onclick="openForm('enseignant')">Enseignant</button>
+<button class="back" onclick="back()">Retour</button>
 </section>
 
 <section id="directeur">
-  <h2>Créer école</h2>
-  <input placeholder="Nom école">
-  <input placeholder="Nom directeur">
-  <input placeholder="ID école">
-  <input type="password" placeholder="Mot de passe">
-  <button class="primary" onclick="creerEcole()">Créer</button>
-  <button class="back" onclick="back()">Retour</button>
+<h2>Créer école</h2>
+<input id="dNomEcole" placeholder="Nom école">
+<input id="dNomDir" placeholder="Nom directeur">
+<input id="dIdEcole" placeholder="ID école">
+<input id="dMdp" type="password" placeholder="Mot de passe">
+<button class="primary" onclick="creerEcole()">Créer</button>
+<button class="back" onclick="back()">Retour</button>
 </section>
 
 <section id="enseignant">
-  <h2>Créer enseignant</h2>
-  <input id="ensNom" placeholder="Nom">
-  <input id="ensMdp" type="password" placeholder="Mot de passe">
-  <input id="ensEcole" placeholder="ID école">
-  <button class="secondary" onclick="creerEnseignant()">Créer</button>
-  <button class="back" onclick="back()">Retour</button>
+<h2>Créer enseignant</h2>
+<input id="ensNom" placeholder="Nom">
+<input id="ensMdp" type="password" placeholder="Mot de passe">
+<input id="ensEcole" placeholder="ID école">
+<button class="secondary" onclick="creerEnseignant()">Créer</button>
+<button class="back" onclick="back()">Retour</button>
 </section>
 
 <section id="login">
-  <h2>Connexion</h2>
-  <input placeholder="ID école">
-  <input placeholder="ID classe">
-  <input type="password" placeholder="Mot de passe">
-  <button class="primary" onclick="login()">Connexion</button>
-  <button class="back" onclick="back()">Retour</button>
+<h2>Connexion</h2>
+<input id="logEcole" placeholder="ID école">
+<input id="logClasse" placeholder="ID classe">
+<input id="logMdp" type="password" placeholder="Mot de passe">
+<button class="primary" onclick="login()">Connexion</button>
+<button class="back" onclick="back()">Retour</button>
 </section>
 
 <section id="dashboard">
+<h2>Dashboard</h2>
+<p id="mode"></p>
+<p id="userInfo"></p>
 
-  <h2>Dashboard</h2>
-  <p id="mode"></p>
-  <p id="userInfo"></p>
+<div class="card">
+<h3>Élèves</h3>
+<input id="nomEleve" placeholder="Nom">
+<input id="classeEleve" placeholder="Classe">
+<button onclick="addEleve()">Ajouter</button>
+<div id="listEleves"></div>
+</div>
 
-  <div class="card">
-    <h3>Élèves</h3>
-    <input id="nomEleve" placeholder="Nom">
-    <input id="classeEleve" placeholder="Classe">
-    <button onclick="addEleve()">Ajouter</button>
-    <div id="listEleves"></div>
-  </div>
+<div class="card" id="ensCard">
+<h3>Enseignants</h3>
+<input id="nomEns" placeholder="Nom">
+<button onclick="addEns()">Ajouter</button>
+<div id="listEns"></div>
+</div>
 
-  <div class="card" id="ensCard">
-    <h3>Enseignants</h3>
-    <input id="nomEns" placeholder="Nom">
-    <button onclick="addEns()">Ajouter</button>
-    <div id="listEns"></div>
-  </div>
+<button onclick="openPage('page1')">📄 Page 1</button>
+<button onclick="openPage('page2')">📄 Page 2</button>
 
-  <button class="back" onclick="back()">Déconnexion</button>
-
+<button class="back" onclick="back()">Déconnexion</button>
 </section>
+
+<section id="edit">
+<h2>Modifier</h2>
+<input id="editNom">
+<input id="editClasse">
+<button onclick="saveEdit()">Enregistrer</button>
+<button class="back" onclick="show('dashboard')">Retour</button>
+</section>
+
+<section id="page1"><h2>Page vide 1</h2><p>Ajoute tes données ici</p><button onclick="show('dashboard')">Retour</button></section>
+<section id="page2"><h2>Page vide 2</h2><p>Ajoute tes données ici</p><button onclick="show('dashboard')">Retour</button></section>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js"></script>
 
 <script>
 
-let db = JSON.parse(localStorage.getItem("db")) || {};
-let currentSchool = null;
-let role = "";
-let currentUser = "";
+const firebaseConfig = {
+apiKey: "AIza...",
+authDomain: "school-manager.firebaseapp.com",
+databaseURL: "https://school-manager-default-rtdb.firebaseio.com",
+projectId: "school-manager",
+storageBucket: "school-manager.appspot.com",
+messagingSenderId: "123456",
+appId: "1:123456:web:abc"
+};
+
+firebase.initializeApp(firebaseConfig);
+const dbOnline = firebase.database();
+
+let currentSchool=null;
+let role="";
+let currentUser="";
+let editIndex=null;
+let editType="";
 
 function show(id){
-  document.querySelectorAll("section").forEach(s=>s.classList.remove("show"));
-  document.getElementById(id).classList.add("show");
+document.querySelectorAll("section").forEach(s=>s.classList.remove("show"));
+document.getElementById(id).classList.add("show");
 }
 
-function load(){document.getElementById("loader").style.display="flex";}
-function unload(){document.getElementById("loader").style.display="none";}
-
-function start(t){
-  load();
-  setTimeout(()=>{
-    unload();
-    show(t===1?"roles":"login");
-  },500);
-}
-
+function start(t){show(t===1?"roles":"login");}
 function openForm(r){show(r);}
 function back(){show("accueil");}
 
-function saveDB(){
-  localStorage.setItem("db",JSON.stringify(db));
-}
-
 function creerEcole(){
 
-  let i=document.querySelectorAll("#directeur input");
+let nom=document.getElementById("dNomEcole").value;
+let dir=document.getElementById("dNomDir").value;
+let id=document.getElementById("dIdEcole").value;
+let mdp=document.getElementById("dMdp").value;
 
-  if([...i].some(x=>!x.value)) return alert("Remplis tout");
+if(!nom||!dir||!id||!mdp)return alert("Remplis tout");
 
-  let id=i[2].value;
-  let idClasse="D"+Math.floor(Math.random()*9000)+"R";
+let idClasse="D"+Math.floor(Math.random()*9000)+"R";
 
-  db[id]={
-    info:{
-      nom:i[0].value,
-      directeur:i[1].value,
-      mdp:i[3].value,
-      idClasse:idClasse
-    },
-    eleves:[],
-    enseignants:[]
-  };
+dbOnline.ref("schools/"+id).set({
+info:{nom,dir,mdp,idClasse},
+eleves:[],
+enseignants:[]
+});
 
-  saveDB();
-
-  alert("École créée\nID: "+id+"\nClasse: "+idClasse);
-
-  show("login");
+alert("École créée\n"+id+"\n"+idClasse);
+show("login");
 }
 
 function creerEnseignant(){
 
-  let nom=document.getElementById("ensNom").value;
-  let mdp=document.getElementById("ensMdp").value;
-  let idEcole=document.getElementById("ensEcole").value;
+let nom=document.getElementById("ensNom").value;
+let mdp=document.getElementById("ensMdp").value;
+let id=document.getElementById("ensEcole").value;
 
-  if(!nom || !mdp || !idEcole) return alert("Remplis tout");
-  if(!db[idEcole]) return alert("École introuvable");
+if(!nom||!mdp||!id)return alert("Remplis tout");
 
-  db[idEcole].enseignants.push({
-    nom,
-    mdp,
-    idEcole
-  });
+dbOnline.ref("schools/"+id+"/enseignants").once("value",snap=>{
+let list=snap.val()||[];
+list.push({nom,mdp});
+dbOnline.ref("schools/"+id+"/enseignants").set(list);
+});
 
-  saveDB();
-
-  currentSchool=idEcole;
-  currentUser=nom;
-
-  show("login");
+alert("Enregistré : "+nom);
+show("login");
 }
 
 function login(){
 
-  let i=document.querySelectorAll("#login input");
+let id=document.getElementById("logEcole").value;
+let idC=document.getElementById("logClasse").value;
+let mdp=document.getElementById("logMdp").value;
 
-  let idE=i[0].value;
-  let idC=i[1].value;
-  let mdp=i[2].value;
+dbOnline.ref("schools/"+id).once("value",snap=>{
 
-  let school=db[idE];
+let s=snap.val();
+if(!s)return alert("Introuvable");
 
-  if(!school) return alert("École introuvable");
+if(idC===s.info.idClasse && mdp===s.info.mdp){
+currentSchool=id;
+role="directeur";
+currentUser=s.info.dir;
+openDashboard();
+return;
+}
 
-  load();
+let ens=s.enseignants||[];
+let found=ens.find(e=>e.mdp===mdp);
 
-  setTimeout(()=>{
+if(found){
+currentSchool=id;
+role="enseignant";
+currentUser=found.nom;
+openDashboard();
+return;
+}
 
-    unload();
+alert("Erreur");
 
-    if(idC===school.info.idClasse && mdp===school.info.mdp){
-      currentSchool=idE;
-      role="directeur";
-      currentUser=school.info.directeur;
-      openDashboard();
-      return;
-    }
-
-    let ens=school.enseignants.find(e=>e.mdp===mdp && e.idEcole===idE);
-
-    if(ens){
-      currentSchool=idE;
-      role="enseignant";
-      currentUser=ens.nom;
-      openDashboard();
-      return;
-    }
-
-    alert("Erreur connexion");
-
-  },500);
+});
 }
 
 function openDashboard(){
-  show("dashboard");
-  document.body.className=role;
-  document.getElementById("mode").innerText=role;
-  document.getElementById("userInfo").innerText="Connecté : "+currentUser;
-  render();
-  if(role!=="directeur"){
-    document.getElementById("ensCard").style.display="none";
-  }else{
-    document.getElementById("ensCard").style.display="block";
-  }
+show("dashboard");
+document.body.className=role;
+document.getElementById("mode").innerText=role;
+document.getElementById("userInfo").innerText="Connecté : "+currentUser;
+loadData();
+if(role!=="directeur"){
+document.getElementById("ensCard").style.display="none";
+}else{
+document.getElementById("ensCard").style.display="block";
+}
+}
+
+function loadData(){
+
+dbOnline.ref("schools/"+currentSchool).on("value",snap=>{
+let d=snap.val();
+
+let e=document.getElementById("listEleves");
+let t=document.getElementById("listEns");
+
+e.innerHTML="";
+t.innerHTML="";
+
+(d.eleves||[]).forEach((x,i)=>{
+e.innerHTML+=`<div class="item" onclick="editUser('eleve',${i})">${x.nom}-${x.classe}</div>`;
+});
+
+if(role==="directeur"){
+(d.enseignants||[]).forEach((x,i)=>{
+t.innerHTML+=`<div class="item" onclick="editUser('ens',${i})">${x.nom}</div>`;
+});
+}
+
+});
 }
 
 function addEleve(){
 
-  if(role!=="directeur") return;
+let nom=document.getElementById("nomEleve").value;
+let classe=document.getElementById("classeEleve").value;
 
-  db[currentSchool].eleves.push({
-    nom:nomEleve.value,
-    classe:classeEleve.value
-  });
+if(role!=="directeur")return;
+if(!nom||!classe)return alert("Remplis tout");
 
-  saveDB();
-  render();
+dbOnline.ref("schools/"+currentSchool+"/eleves").once("value",snap=>{
+let list=snap.val()||[];
+list.push({nom,classe});
+dbOnline.ref("schools/"+currentSchool+"/eleves").set(list);
+});
 }
 
 function addEns(){
 
-  if(role!=="directeur") return;
+let nom=document.getElementById("nomEns").value;
 
-  db[currentSchool].enseignants.push({
-    nom:nomEns.value
-  });
+if(role!=="directeur")return;
+if(!nom)return alert("Nom vide");
 
-  saveDB();
-  render();
+dbOnline.ref("schools/"+currentSchool+"/enseignants").once("value",snap=>{
+let list=snap.val()||[];
+list.push({nom});
+dbOnline.ref("schools/"+currentSchool+"/enseignants").set(list);
+});
 }
 
-function render(){
+function editUser(type,index){
+editType=type;
+editIndex=index;
+show("edit");
 
-  let e=document.getElementById("listEleves");
-  let t=document.getElementById("listEns");
-
-  e.innerHTML="";
-  t.innerHTML="";
-
-  db[currentSchool].eleves.forEach(x=>{
-    e.innerHTML+=`<div class="item">${x.nom}-${x.classe}</div>`;
-  });
-
-  if(role==="directeur"){
-    db[currentSchool].enseignants.forEach(x=>{
-      t.innerHTML+=`<div class="item">${x.nom}</div>`;
-    });
-  }
+dbOnline.ref("schools/"+currentSchool+"/"+(type==="eleve"?"eleves":"enseignants")).once("value",snap=>{
+let d=snap.val()[index];
+document.getElementById("editNom").value=d.nom||"";
+document.getElementById("editClasse").value=d.classe||"";
+});
 }
+
+function saveEdit(){
+
+let nom=document.getElementById("editNom").value;
+let classe=document.getElementById("editClasse").value;
+
+dbOnline.ref("schools/"+currentSchool+"/"+(editType==="eleve"?"eleves":"enseignants")).once("value",snap=>{
+let list=snap.val();
+list[editIndex].nom=nom;
+if(editType==="eleve")list[editIndex].classe=classe;
+dbOnline.ref("schools/"+currentSchool+"/"+(editType==="eleve"?"eleves":"enseignants")).set(list);
+});
+
+show("dashboard");
+}
+
+function openPage(p){show(p);}
 
 </script>
 
