@@ -1,556 +1,129 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8">
-<title>Système École PRO</title>
-
+<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><title>Système École PRO</title>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
 <style>
-body{
-    font-family: 'Segoe UI', Tahoma, sans-serif;
-    margin:0;
-    padding:0;
-    background:#1e1f26; /* 🔥 fond sombre */
-    color:#eaeaea;
-    
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-}
-
-/* TITRES */
-h2{
-    color:#00d4ff;
-    text-align:center;
-    font-size:26px;
-}
-
-h3{
-    color:#ffcc00;
-    text-align:center;
-    font-size:20px;
-}
-
-/* SECTIONS */
-.section{
-    width:100%;
-    max-width:900px;
-    background:#2a2c36;
-    margin:15px 0;
-    padding:25px;
-    border-radius:15px;
-    box-shadow:0 8px 25px rgba(0,0,0,0.4);
-}
-
-/* INPUTS */
-input, select{
-    width:100%;
-    padding:14px;
-    margin:8px 0;
-    border:none;
-    border-radius:10px;
-    font-size:16px;
-    background:#1e1f26;
-    color:white;
-    outline:none;
-}
-
-/* FOCUS INPUT */
-input:focus, select:focus{
-    box-shadow:0 0 10px #00d4ff;
-}
-
-/* BOUTONS AGRANDIS */
-button{
-    width:100%;
-    padding:14px;
-    margin-top:10px;
-    border:none;
-    border-radius:10px;
-    cursor:pointer;
-    font-size:16px;
-    font-weight:bold;
-    color:white;
-    background:linear-gradient(135deg, #00d4ff, #0066ff);
-    transition:0.3s;
-}
-
-button:hover{
-    transform:scale(1.05);
-    background:linear-gradient(135deg, #0066ff, #00d4ff);
-}
-
-/* TABLE BLANCHE (IMPORTANT) */
-table{
-    width:100%;
-    border-collapse:collapse;
-    margin-top:10px;
-    background:white;
-    color:black;
-    border-radius:10px;
-    overflow:hidden;
-}
-
-/* HEADER TABLE */
-th{
-    background:#0066ff;
-    color:white;
-    padding:14px;
-    font-size:15px;
-}
-
-/* CELLS */
-td{
-    padding:12px;
-    text-align:center;
-    border-bottom:1px solid #eee;
-}
-
-/* HOVER TABLE */
-tr:hover{
-    background:#f0f6ff;
-}
-
-/* FICHE BLANCHE MAIS PRO */
-#fiche{
-    width:100%;
-    max-width:900px;
-    margin:15px 0;
-    background:#ffffff;
-    color:#000;
-    padding:20px;
-    border-radius:15px;
-    box-shadow:0 8px 25px rgba(0,0,0,0.3);
-    font-size:16px;
-}
-
-/* RESPONSIVE */
-@media (max-width:600px){
-    .section, #fiche{
-        width:95%;
-    }
-
-    button{
-        font-size:14px;
-    }
-}
-</style>
-
-</head>
+body{font-family:Segoe UI,Tahoma,sans-serif;margin:0;padding:0;background:#1e1f26;color:#eaeaea;display:flex;flex-direction:column;align-items:center}
+h2{color:#00d4ff;text-align:center}h3{color:#ffcc00;text-align:center}
+.section{width:100%;max-width:900px;background:#2a2c36;margin:15px 0;padding:25px;border-radius:15px}
+input,select{width:100%;padding:14px;margin:8px 0;border:none;border-radius:10px;background:#1e1f26;color:#fff}
+button{width:100%;padding:14px;border:none;border-radius:10px;font-weight:bold;color:#fff;background:linear-gradient(135deg,#00d4ff,#0066ff)}
+table{width:100%;border-collapse:collapse;background:#fff;color:#000}
+th{background:#0066ff;color:#fff;padding:14px}td{padding:12px;text-align:center}
+#fiche{max-width:900px;background:#fff;color:#000;padding:20px;border-radius:15px}
+</style></head>
 <body>
 
-<!-- ================= ECOLE ================= -->
+<script>
+firebase.initializeApp({
+apiKey:"XXX",
+authDomain:"multi-ecole.firebaseapp.com",
+databaseURL:"https://multi-ecole-default-rtdb.europe-west1.firebasedatabase.app/",
+projectId:"multi-ecole"
+});
+const db=firebase.database();
+</script>
+
 <div class="section">
-<h2>Créer une école</h2>
-
-<input type="text" id="nomEcole" placeholder="Nom école">
-<input type="text" id="codeEcole" placeholder="Code école (ex: ECO001)">
-<button onclick="ajouterEcole()">Ajouter école</button>
-
-<br><br>
-
+<h2>Créer école</h2>
+<input id="nomEcole"><input id="codeEcole">
+<button onclick="ajouterEcole()">Ajouter</button>
 <select id="ecoleSelect"></select>
 </div>
 
-<!-- ================= FILTRE ECOLE ================= -->
 <div class="section">
-<h3>Choisir école</h3>
-
-<select id="ecole" onchange="afficher()">
-<option value="">--Choisir école--</option>
-</select>
+<h3>École</h3>
+<select id="ecole" onchange="afficher()"></select>
 </div>
 
-<!-- ================= FORMULAIRE ================= -->
 <div class="section">
 <h2>Formulaire</h2>
-
-<select id="role" onchange="changerFormulaire()">
-<option value="DIR">Directeur</option>
-<option value="ENS">Enseignant</option>
-<option value="ELV">Élève</option>
+<select id="role" onchange="formulaire()">
+<option>DIR</option><option>ENS</option><option>ELV</option>
 </select>
-
-<br>
-
-<input type="text" id="nom" placeholder="Nom">
-<input type="text" id="postnom" placeholder="Postnom">
-<input type="text" id="prenom" placeholder="Prénom">
-
-<select id="sexe">
-<option value="M">Masculin</option>
-<option value="F">Féminin</option>
-</select>
-
-<!-- Champs dynamiques -->
+<input id="nom"><input id="postnom"><input id="prenom">
+<select id="sexe"><option>M</option><option>F</option></select>
 <div id="plus"></div>
-
-<br>
-<button onclick="enregistrer()">Enregistrer</button>
+<button onclick="enregistrer()">OK</button>
 </div>
 
-<!-- ================= RECHERCHE ================= -->
 <div class="section">
-<h3>Recherche & Filtre</h3>
-
-<input type="text" id="recherche" placeholder="Rechercher nom..." onkeyup="afficher()">
-
+<input id="recherche" onkeyup="afficher()" placeholder="recherche">
 <select id="filtreRole" onchange="afficher()">
-<option value="">Tous les rôles</option>
-<option value="DIR">Directeur</option>
-<option value="ENS">Enseignant</option>
-<option value="ELV">Élève</option>
+<option value="">Tous</option><option>DIR</option><option>ENS</option><option>ELV</option>
 </select>
-
-<input type="text" id="filtreClasse" placeholder="Filtrer par classe (élève)" onkeyup="afficher()">
 </div>
 
-<!-- ================= STATS ================= -->
-<div class="section">
-<h3>Statistiques</h3>
-<div id="stats"></div>
-</div>
+<div class="section"><table><thead><tr>
+<th>Mat</th><th>Nom</th><th>Post</th><th>Prénom</th><th>École</th><th>Actions</th>
+</tr></thead><tbody id="tableau"></tbody></table></div>
 
-<!-- ================= TABLE ================= -->
-<div class="section">
-<h2>Liste</h2>
-
-<table>
-<thead>
-<tr>
-<th>Matricule</th>
-<th>Nom</th>
-<th>Postnom</th>
-<th>Prénom</th>
-<th>École</th>
-<th>Actions</th>
-</tr>
-</thead>
-
-<tbody id="tableau"></tbody>
-</table>
-</div>
-
-<!-- ================= FICHE ================= -->
 <div id="fiche"></div>
-  
-  
-  <script>
 
-// ================= ECOLES =================
+<script>
 
-// Ajouter école
+let edit=-1,cDIR=1,cENS=1,cELV=1;
+
 function ajouterEcole(){
-let nom = document.getElementById("nomEcole").value.trim();
-let code = document.getElementById("codeEcole").value.trim();
-
-if(!nom || !code){
-alert("Remplir nom et code école !");
-return;
+let id="ECOLE-"+Date.now();
+db.ref("ecoles/"+id).set({id,nom:nomEcole.value,code:codeEcole.value});
+nomEcole.value="";codeEcole.value="";charger();
 }
 
-let id = "ECOLE-" + new Date().getTime();
-
-let ecole = { id, nom, code };
-
-let ecoles = JSON.parse(localStorage.getItem("ecoles")) || [];
-ecoles.push(ecole);
-
-localStorage.setItem("ecoles", JSON.stringify(ecoles));
-
-document.getElementById("nomEcole").value = "";
-document.getElementById("codeEcole").value = "";
-
-chargerEcoles();
+function charger(){
+db.ref("ecoles").once("value",s=>{
+let d=s.val()||{};
+ecoleSelect.innerHTML="";ecole.innerHTML="";
+for(let k in d){
+ecoleSelect.innerHTML+=`<option value="${d[k].id}">${d[k].nom}</option>`;
+ecole.innerHTML+=`<option value="${d[k].id}">${d[k].nom}</option>`;
 }
-
-// Charger écoles
-function chargerEcoles(){
-let ecoles = JSON.parse(localStorage.getItem("ecoles")) || [];
-
-let select = document.getElementById("ecoleSelect");
-let filtre = document.getElementById("ecole");
-
-select.innerHTML = "";
-filtre.innerHTML = `<option value="">--Choisir école--</option>`;
-
-ecoles.forEach(e=>{
-select.innerHTML += `<option value="${e.id}">${e.nom} (${e.code})</option>`;
-filtre.innerHTML += `<option value="${e.id}">${e.nom}</option>`;
 });
-
-// sélectionner première école auto
-if(ecoles.length > 0){
-filtre.value = ecoles[0].id;
-}
 }
 
-// Trouver nom école
-function getNomEcole(id){
-let ecoles = JSON.parse(localStorage.getItem("ecoles")) || [];
-let e = ecoles.find(x=>x.id===id);
-return e ? e.nom + " ("+e.code+")" : "Inconnue";
+function mat(r){
+if(r=="DIR")return"D-DIR-"+String(cDIR++).padStart(4,"0")+"-S";
+if(r=="ENS")return"D-ENS-"+String(cENS++).padStart(4,"0")+"-S";
+return"D-ELV-"+String(cELV++).padStart(4,"0")+"-S";
 }
 
-// ================= COMPTEURS =================
-let cDIR = parseInt(localStorage.getItem("cDIR")) || 1;
-let cENS = parseInt(localStorage.getItem("cENS")) || 1;
-let cELV = parseInt(localStorage.getItem("cELV")) || 1;
-
-let indexEdit = -1;
-
-// ================= FORMULAIRE =================
-function changerFormulaire(){
-let role = document.getElementById("role").value;
-let div = document.getElementById("plus");
-
-if(role==="ENS"){
-div.innerHTML = `<input type="text" id="classeTitulaire" placeholder="Classe titulaire">`;
-}
-else if(role==="ELV"){
-div.innerHTML = `
-<input type="number" id="age" placeholder="Âge">
-<input type="text" id="classe" placeholder="Classe">
-<input type="text" id="parent" placeholder="N° Parent">`;
-}
-else{
-div.innerHTML="";
-}
+function formulaire(){
+plus.innerHTML=role.value=="ENS"?'<input id="ct">':role.value=="ELV"?
+'<input id="age"><input id="classe"><input id="parent">':"";
 }
 
-// ================= MATRICULE =================
-function genererMatricule(role){
-let numero, code;
-
-if(role==="DIR"){
-numero = cDIR.toString().padStart(4,"0");
-code = "D-DIR-"+numero+"-S";
-cDIR++; localStorage.setItem("cDIR", cDIR);
-}
-
-if(role==="ENS"){
-numero = cENS.toString().padStart(4,"0");
-code = "D-ENS-"+numero+"-S";
-cENS++; localStorage.setItem("cENS", cENS);
-}
-
-if(role==="ELV"){
-numero = cELV.toString().padStart(4,"0");
-code = "D-ELV-"+numero+"-S";
-cELV++; localStorage.setItem("cELV", cELV);
-}
-
-return code;
-}
-
-// ================= ENREGISTRER =================
 function enregistrer(){
-
-let role = document.getElementById("role").value;
-let ecoleID = document.getElementById("ecoleSelect").value;
-
-if(!ecoleID){
-alert("Choisir une école !");
-return;
-}
-
-let data = {
-ecoleID,
-role,
-matricule: genererMatricule(role),
-nom: document.getElementById("nom").value,
-postnom: document.getElementById("postnom").value,
-prenom: document.getElementById("prenom").value,
-sexe: document.getElementById("sexe").value
-};
-
-// Champs spécifiques
-if(role==="ENS"){
-let ct = document.getElementById("classeTitulaire");
-data.classeTitulaire = ct ? ct.value : "";
-}
-
-if(role==="ELV"){
-data.age = document.getElementById("age")?.value || "";
-data.classe = document.getElementById("classe")?.value || "";
-data.parent = document.getElementById("parent")?.value || "";
-}
-
-let liste = JSON.parse(localStorage.getItem("liste")) || [];
-
-if(indexEdit === -1){
-liste.push(data);
-}else{
-data.matricule = liste[indexEdit].matricule;
-liste[indexEdit] = data;
-indexEdit = -1;
-}
-
-localStorage.setItem("liste", JSON.stringify(liste));
-
-vider();
+let id=ecoleSelect.value;
+let d={ecoleID:id,role:role.value,matricule:mat(role.value),nom:nom.value,postnom:postnom.value,prenom:prenom.value,sexe:sexe.value};
+if(role.value=="ENS")d.classeTitulaire=ct?.value||"";
+if(role.value=="ELV"){d.age=age?.value||"";d.classe=classe?.value||"";d.parent=parent?.value||""}
+if(edit==-1)db.ref("perso").push(d);
+else db.ref("perso/"+edit).set(d),edit=-1;
 afficher();
 }
 
-// ================= AFFICHER =================
 function afficher(){
-
-let liste = JSON.parse(localStorage.getItem("liste")) || [];
-let table = document.getElementById("tableau");
-let statsDiv = document.getElementById("stats");
-
-let recherche = document.getElementById("recherche").value.toLowerCase();
-let filtreRole = document.getElementById("filtreRole").value;
-let filtreClasse = document.getElementById("filtreClasse").value.toLowerCase();
-let ecoleFiltre = document.getElementById("ecole").value;
-
-table.innerHTML = "";
-
-// STATS
-let total=0, dir=0, ens=0, elv=0;
-let classes={};
-
-liste.forEach((item,index)=>{
-
-// FILTRE ECOLE
-if(ecoleFiltre && item.ecoleID !== ecoleFiltre) return;
-
-// RECHERCHE
-let matchRecherche =
-item.nom.toLowerCase().includes(recherche) ||
-item.postnom.toLowerCase().includes(recherche) ||
-item.prenom.toLowerCase().includes(recherche);
-
-// ROLE
-let matchRole = filtreRole==="" || item.role===filtreRole;
-
-// CLASSE
-let matchClasse = true;
-if(filtreClasse){
-matchClasse = item.classe && item.classe.toLowerCase().includes(filtreClasse);
+db.ref("perso").on("value",s=>{
+let d=s.val()||{},t="";
+for(let k in d){
+let x=d[k];
+if(filtreRole.value && x.role!=filtreRole.value)continue;
+if(recherche.value && !(x.nom+x.postnom+x.prenom).toLowerCase().includes(recherche.value.toLowerCase()))continue;
+t+=`<tr><td>${x.matricule}</td><td>${x.nom}</td><td>${x.postnom}</td><td>${x.prenom}</td><td>${x.ecoleID}</td>
+<td><button onclick="voir('${k}')">V</button><button onclick="sup('${k}')">S</button></td></tr>`;
 }
-
-// STATS
-total++;
-if(item.role==="DIR") dir++;
-if(item.role==="ENS") ens++;
-if(item.role==="ELV"){
-elv++;
-if(item.classe){
-classes[item.classe] = (classes[item.classe]||0)+1;
-}
-}
-
-// TABLE
-if(matchRecherche && matchRole && matchClasse){
-table.innerHTML += `
-<tr>
-<td>${item.matricule}</td>
-<td>${item.nom}</td>
-<td>${item.postnom}</td>
-<td>${item.prenom}</td>
-<td>${getNomEcole(item.ecoleID)}</td>
-<td>
-<button onclick="voir(${index})">AFFICHER</button>
-<button onclick="modifier(${index})">MODIFIER</button>
-<button onclick="supprimer(${index})">SUPPRIMER</button>
-</td>
-</tr>`;
-}
-
+tableau.innerHTML=t;
 });
-
-// STATS
-let html = `
-Total: ${total}<br>
-Directeurs: ${dir}<br>
-Enseignants: ${ens}<br>
-Élèves: ${elv}<br><br>
-<b>Élèves par classe :</b><br>`;
-
-for(let c in classes){
-html += `${c} : ${classes[c]}<br>`;
 }
 
-statsDiv.innerHTML = html;
-}
-
-// ================= AUTRES =================
 function voir(i){
-let liste = JSON.parse(localStorage.getItem("liste"));
-let p = liste[i];
-
-let details = `
-<h3>Fiche complète</h3>
-École: ${getNomEcole(p.ecoleID)}<br>
-Rôle : ${p.role}<br>
-Matricule: ${p.matricule}<br>
-Nom: ${p.nom}<br>
-Postnom: ${p.postnom}<br>
-Prénom: ${p.prenom}<br>
-Sexe: ${p.sexe}<br>`;
-
-if(p.classeTitulaire){
-details += "Classe titulaire: "+p.classeTitulaire+"<br>";
+db.ref("perso/"+i).once("value",s=>{
+let p=s.val();
+fiche.innerHTML=`${p.nom} ${p.postnom} ${p.prenom}<br>${p.matricule}`;
+});
 }
 
-if(p.age){
-details += `
-Âge: ${p.age}<br>
-Classe: ${p.classe}<br>
-Parent: ${p.parent}<br>`;
-}
+function sup(i){db.ref("perso/"+i).remove();}
 
-document.getElementById("fiche").innerHTML = details;
-}
+window.onload=()=>{charger();formulaire();afficher()};
 
-function supprimer(i){
-let liste = JSON.parse(localStorage.getItem("liste"));
-liste.splice(i,1);
-localStorage.setItem("liste", JSON.stringify(liste));
-afficher();
-document.getElementById("fiche").innerHTML="";
-}
-
-function modifier(i){
-let liste = JSON.parse(localStorage.getItem("liste"));
-let p = liste[i];
-
-indexEdit = i;
-
-document.getElementById("role").value = p.role;
-changerFormulaire();
-
-document.getElementById("nom").value = p.nom;
-document.getElementById("postnom").value = p.postnom;
-document.getElementById("prenom").value = p.prenom;
-document.getElementById("sexe").value = p.sexe;
-
-if(p.classeTitulaire){
-document.getElementById("classeTitulaire").value = p.classeTitulaire;
-}
-
-if(p.age){
-document.getElementById("age").value = p.age;
-document.getElementById("classe").value = p.classe;
-document.getElementById("parent").value = p.parent;
-}
-}
-
-function vider(){
-document.getElementById("nom").value="";
-document.getElementById("postnom").value="";
-document.getElementById("prenom").value="";
-document.getElementById("fiche").innerHTML="";
-}
-
-// ================= INIT =================
-window.onload = function(){
-chargerEcoles();
-changerFormulaire();
-afficher();
-}
-
-</script>
-
-</body>
-</html>
+</script></body></html>
