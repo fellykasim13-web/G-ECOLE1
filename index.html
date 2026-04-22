@@ -1,129 +1,374 @@
-<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><title>Système École PRO</title>
-<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
-<style>
-body{font-family:Segoe UI,Tahoma,sans-serif;margin:0;padding:0;background:#1e1f26;color:#eaeaea;display:flex;flex-direction:column;align-items:center}
-h2{color:#00d4ff;text-align:center}h3{color:#ffcc00;text-align:center}
-.section{width:100%;max-width:900px;background:#2a2c36;margin:15px 0;padding:25px;border-radius:15px}
-input,select{width:100%;padding:14px;margin:8px 0;border:none;border-radius:10px;background:#1e1f26;color:#fff}
-button{width:100%;padding:14px;border:none;border-radius:10px;font-weight:bold;color:#fff;background:linear-gradient(135deg,#00d4ff,#0066ff)}
-table{width:100%;border-collapse:collapse;background:#fff;color:#000}
-th{background:#0066ff;color:#fff;padding:14px}td{padding:12px;text-align:center}
-#fiche{max-width:900px;background:#fff;color:#000;padding:20px;border-radius:15px}
-</style></head>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Multi-École PRO</title>
+  <style>
+  /* 🌙 MODE SOMBRE */
+body.dark {
+  background: #121826;
+  color: #e5e7eb;
+}
+
+/* Cartes */
+body.dark .box {
+  background: #1e293b;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+}
+  footer {
+  text-align: center;
+  padding: 10px;
+  font-size: 12px;
+  color: #777;
+  margin-top: 30px;
+}
+
+  body.dark footer {
+  color: #aaa;
+}
+/* Inputs */
+body.dark input,
+body.dark select {
+  background: #0f172a;
+  color: #e5e7eb;
+  border: 1px solid #334155;
+}
+
+body.dark input:focus,
+body.dark select:focus {
+  border-color: #60a5fa;
+  box-shadow: 0 0 5px rgba(96,165,250,0.4);
+}
+
+/* Boutons */
+body.dark button {
+  background: #2563eb;
+}
+
+body.dark button:hover {
+  background: #1d4ed8;
+}
+
+/* Liste */
+body.dark li {
+  background: #0f172a;
+  border-left: 4px solid #60a5fa;
+}
+
+/* Textes */
+body.dark h2,
+body.dark h3 {
+  color: #e5e7eb;
+}
+    body {
+  font-family: Arial, sans-serif;
+  background: #f4f6f9;
+  margin: 0;
+  padding: 0;
+  color: #333;
+}
+
+h1, h2, h3 {
+  text-align: center;
+  color: #1a1a1a;
+}
+
+/* Conteneurs */
+.box {
+  display: none;
+  max-width: 450px;
+  margin: 20px auto;
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* Inputs */
+input, select {
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  outline: none;
+  transition: 0.2s;
+}
+
+input:focus, select:focus {
+  border-color: #4a90e2;
+  box-shadow: 0 0 5px rgba(74,144,226,0.3);
+}
+
+/* Boutons */
+button {
+  width: 100%;
+  padding: 12px;
+  background: #4a90e2;
+  border: none;
+  color: white;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: 0.2s;
+}
+
+button:hover {
+  background: #357ab8;
+}
+
+/* Home buttons */
+#home button {
+  max-width: 300px;
+  margin: 10px auto;
+  display: block;
+}
+
+/* Liste */
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  background: #fff;
+  margin: 5px 0;
+  padding: 10px;
+  border-radius: 6px;
+  border-left: 4px solid #4a90e2;
+}
+
+/* Dashboard titre */
+#title {
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+/* Responsive mobile */
+@media (max-width: 600px) {
+  .box {
+    width: 90%;
+    margin: 10px auto;
+  }
+
+  button {
+    font-size: 14px;
+  }
+}
+  </style>
+</head>
 <body>
 
-<script>
-firebase.initializeApp({
-apiKey:"XXX",
-authDomain:"multi-ecole.firebaseapp.com",
-databaseURL:"https://multi-ecole-default-rtdb.europe-west1.firebasedatabase.app/",
-projectId:"multi-ecole"
-});
-const db=firebase.database();
+<h2>🏫 MULTI-ÉCOLE PRO</h2>
+
+<!-- HOME -->
+<div id="home">
+  <button onclick="toggleDark()">🌙 Mode Noire</button>
+  <br>
+  <h2> BIENVENUE TRES CHERS </h2>
+  <p style="text-align: center"> (Directeur, Enseignant, Elève) </p>
+  <button onclick="show('create')">➕ Créer école</button>
+  <button onclick="show('login')">🔑 Accéder école</button>
+  <br>
+  <h3> Communiquer bien dans votre Etablissement sans perdre vos données </h3>
+</div>
+
+<!-- CREER ECOLE -->
+<div id="create" class="box">
+  <h3>Créer une école</h3>
+  <input id="schoolName" placeholder="Nom école">
+  <button onclick="createSchool()">Créer</button>
+</div>
+
+<!-- LOGIN -->
+<div id="login" class="box">
+  <h3>Accès école</h3>
+  <input id="schoolCode" placeholder="Code école">
+  <button onclick="loginSchool()">Entrer</button>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard" class="box">
+
+  <h3 id="title"></h3>
+
+  <select id="role" onchange="changeForm()">
+    <option value="">Choisir rôle</option>
+    <option value="dir">Directeur</option>
+    <option value="ens">Enseignant</option>
+    <option value="elv">Élève</option>
+  </select>
+
+  <!-- FORM DIRECTEUR -->
+  <div id="formDir" class="box">
+    <input id="d_nom" placeholder="Nom">
+    <input id="d_post" placeholder="Postnom">
+    <input id="d_prenom" placeholder="Prénom">
+    <input id="d_tel" placeholder="Téléphone">
+    <button onclick="saveDir()">Enregistrer Directeur</button>
+  </div>
+
+  <!-- FORM ENSEIGNANT -->
+  <div id="formEns" class="box">
+    <input id="e_nom" placeholder="Nom">
+    <input id="e_post" placeholder="Postnom">
+    <input id="e_prenom" placeholder="Prénom">
+    <input id="e_cours" placeholder="Cours">
+    <input id="e_cours2" placeholder="Autre cours (facultatif)">
+    <input id="e_classe" placeholder="Classe">
+    <input id="e_tel" placeholder="Téléphone">
+    <button onclick="saveEns()">Enregistrer Enseignant</button>
+  </div>
+
+  <!-- FORM ELEVE -->
+  <div id="formElv" class="box">
+    <input id="s_nom" placeholder="Nom">
+    <input id="s_post" placeholder="Postnom">
+    <input id="s_prenom" placeholder="Prénom">
+    <input id="s_classe" placeholder="Classe">
+    <input id="s_addr" placeholder="Adresse">
+    <input id="s_parent" placeholder="N° parent">
+    <button onclick="saveElv()">Enregistrer Élève</button>
+  </div>
+
+</div>
+  <br> <br> <br> <br>
+<footer>
+  © 2026 Multi-École PRO - Tous droits réservés
+</footer>
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, push, get, child, set } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+// 🔥 CONFIG FIREBASE
+const firebaseConfig = {
+  apiKey: "AIzaSyDcgJDckF9vejT476nYTGHAwa75dotPkMA",
+  authDomain: "multi-ecole.firebaseapp.com",
+  databaseURL: "https://multi-ecole-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "multi-ecole",
+  storageBucket: "multi-ecole.firebasestorage.app",
+  messagingSenderId: "421233691634",
+  appId: "1:421233691634:web:c6884b8250c8cd1b7b796b"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+let currentSchool = "";
+
+// 🔁 navigation
+window.show = function(page){
+  document.querySelectorAll(".box").forEach(b => b.style.display="none");
+  document.getElementById(page).style.display="block";
+}
+
+// 🏫 créer école
+window.createSchool = function(){
+  const name = document.getElementById("schoolName").value;
+  const code = name.toLowerCase().replace(/\s/g,'') + "_" + Math.floor(Math.random()*1000);
+
+  get(child(ref(db), "ecoles/" + code)).then(snap=>{
+    if(snap.exists()){
+      alert("École existe déjà !");
+    } else {
+      set(ref(db,"ecoles/"+code),{
+        name:name,
+        code:code
+      });
+
+      alert("École créée. Code: " + code);
+    }
+  });
+}
+
+// 🔑 login
+window.loginSchool = function(){
+  const code = document.getElementById("schoolCode").value;
+
+  get(child(ref(db),"ecoles/"+code)).then(snap=>{
+    if(snap.exists()){
+      currentSchool = code;
+      document.getElementById("title").innerText = "École: " + snap.val().name;
+      show("dashboard");
+    } else {
+      alert("École introuvable !");
+    }
+  });
+}
+
+// 🔄 changer formulaire
+window.changeForm = function(){
+  document.getElementById("formDir").style.display="none";
+  document.getElementById("formEns").style.display="none";
+  document.getElementById("formElv").style.display="none";
+
+  const r = document.getElementById("role").value;
+
+  if(r=="dir") document.getElementById("formDir").style.display="block";
+  if(r=="ens") document.getElementById("formEns").style.display="block";
+  if(r=="elv") document.getElementById("formElv").style.display="block";
+}
+
+// 🔐 codes
+function gen(prefix, end){
+  return prefix + "-" + Math.random().toString(36).substring(2,7).toUpperCase() + "-" + end;
+}
+
+// 👨‍🏫 directeur
+window.saveDir = function(){
+  const data = {
+    nom:d_nom.value,
+    postnom:d_post.value,
+    prenom:d_prenom.value,
+    tel:d_tel.value,
+    role:"directeur",
+    code:gen("DIR","EUR")
+  };
+  push(ref(db,"ecoles/"+currentSchool+"/directeurs"),data);
+  alert("Directeur enregistré");
+}
+
+// 👩‍🏫 enseignant
+window.saveEns = function(){
+  const data = {
+    nom:e_nom.value,
+    postnom:e_post.value,
+    prenom:e_prenom.value,
+    cours:e_cours.value,
+    cours2:e_cours2.value,
+    classe:e_classe.value,
+    tel:e_tel.value,
+    role:"enseignant",
+    code:gen("ENS","ENT")
+  };
+  push(ref(db,"ecoles/"+currentSchool+"/enseignants"),data);
+  alert("Enseignant enregistré");
+}
+
+// 👨‍🎓 élève
+window.saveElv = function(){
+  const data = {
+    nom:s_nom.value,
+    postnom:s_post.value,
+    prenom:s_prenom.value,
+    classe:s_classe.value,
+    adresse:s_addr.value,
+    parent:s_parent.value,
+    role:"eleve",
+    code:gen("ELV","ES")
+  };
+  push(ref(db,"ecoles/"+currentSchool+"/eleves"),data);
+  alert("Élève enregistré");
+}
+  
+  window.toggleDark = function () {
+  document.body.classList.toggle("dark");
+};
+
 </script>
 
-<div class="section">
-<h2>Créer école</h2>
-<input id="nomEcole"><input id="codeEcole">
-<button onclick="ajouterEcole()">Ajouter</button>
-<select id="ecoleSelect"></select>
-</div>
-
-<div class="section">
-<h3>École</h3>
-<select id="ecole" onchange="afficher()"></select>
-</div>
-
-<div class="section">
-<h2>Formulaire</h2>
-<select id="role" onchange="formulaire()">
-<option>DIR</option><option>ENS</option><option>ELV</option>
-</select>
-<input id="nom"><input id="postnom"><input id="prenom">
-<select id="sexe"><option>M</option><option>F</option></select>
-<div id="plus"></div>
-<button onclick="enregistrer()">OK</button>
-</div>
-
-<div class="section">
-<input id="recherche" onkeyup="afficher()" placeholder="recherche">
-<select id="filtreRole" onchange="afficher()">
-<option value="">Tous</option><option>DIR</option><option>ENS</option><option>ELV</option>
-</select>
-</div>
-
-<div class="section"><table><thead><tr>
-<th>Mat</th><th>Nom</th><th>Post</th><th>Prénom</th><th>École</th><th>Actions</th>
-</tr></thead><tbody id="tableau"></tbody></table></div>
-
-<div id="fiche"></div>
-
-<script>
-
-let edit=-1,cDIR=1,cENS=1,cELV=1;
-
-function ajouterEcole(){
-let id="ECOLE-"+Date.now();
-db.ref("ecoles/"+id).set({id,nom:nomEcole.value,code:codeEcole.value});
-nomEcole.value="";codeEcole.value="";charger();
-}
-
-function charger(){
-db.ref("ecoles").once("value",s=>{
-let d=s.val()||{};
-ecoleSelect.innerHTML="";ecole.innerHTML="";
-for(let k in d){
-ecoleSelect.innerHTML+=`<option value="${d[k].id}">${d[k].nom}</option>`;
-ecole.innerHTML+=`<option value="${d[k].id}">${d[k].nom}</option>`;
-}
-});
-}
-
-function mat(r){
-if(r=="DIR")return"D-DIR-"+String(cDIR++).padStart(4,"0")+"-S";
-if(r=="ENS")return"D-ENS-"+String(cENS++).padStart(4,"0")+"-S";
-return"D-ELV-"+String(cELV++).padStart(4,"0")+"-S";
-}
-
-function formulaire(){
-plus.innerHTML=role.value=="ENS"?'<input id="ct">':role.value=="ELV"?
-'<input id="age"><input id="classe"><input id="parent">':"";
-}
-
-function enregistrer(){
-let id=ecoleSelect.value;
-let d={ecoleID:id,role:role.value,matricule:mat(role.value),nom:nom.value,postnom:postnom.value,prenom:prenom.value,sexe:sexe.value};
-if(role.value=="ENS")d.classeTitulaire=ct?.value||"";
-if(role.value=="ELV"){d.age=age?.value||"";d.classe=classe?.value||"";d.parent=parent?.value||""}
-if(edit==-1)db.ref("perso").push(d);
-else db.ref("perso/"+edit).set(d),edit=-1;
-afficher();
-}
-
-function afficher(){
-db.ref("perso").on("value",s=>{
-let d=s.val()||{},t="";
-for(let k in d){
-let x=d[k];
-if(filtreRole.value && x.role!=filtreRole.value)continue;
-if(recherche.value && !(x.nom+x.postnom+x.prenom).toLowerCase().includes(recherche.value.toLowerCase()))continue;
-t+=`<tr><td>${x.matricule}</td><td>${x.nom}</td><td>${x.postnom}</td><td>${x.prenom}</td><td>${x.ecoleID}</td>
-<td><button onclick="voir('${k}')">V</button><button onclick="sup('${k}')">S</button></td></tr>`;
-}
-tableau.innerHTML=t;
-});
-}
-
-function voir(i){
-db.ref("perso/"+i).once("value",s=>{
-let p=s.val();
-fiche.innerHTML=`${p.nom} ${p.postnom} ${p.prenom}<br>${p.matricule}`;
-});
-}
-
-function sup(i){db.ref("perso/"+i).remove();}
-
-window.onload=()=>{charger();formulaire();afficher()};
-
-</script></body></html>
+</body>
+</html>
