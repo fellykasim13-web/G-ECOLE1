@@ -1,257 +1,204 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Multi-École PRO</title>
-  <style>
-  /* 🌙 MODE SOMBRE */
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Multi-École PRO</title>
+
+<style>
+
+/* 🌙 MODE SOMBRE */
 body.dark {
   background: #121826;
   color: #e5e7eb;
 }
 
-/* Cartes */
 body.dark .box {
   background: #1e293b;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-}
-  footer {
-  text-align: center;
-  padding: 10px;
-  font-size: 12px;
-  color: #777;
-  margin-top: 30px;
 }
 
-  body.dark footer {
-  color: #aaa;
-}
-/* Inputs */
-body.dark input,
-body.dark select {
-  background: #0f172a;
-  color: #e5e7eb;
-  border: 1px solid #334155;
-}
-
-body.dark input:focus,
-body.dark select:focus {
-  border-color: #60a5fa;
-  box-shadow: 0 0 5px rgba(96,165,250,0.4);
-}
-
-/* Boutons */
-body.dark button {
-  background: #2563eb;
-}
-
-body.dark button:hover {
-  background: #1d4ed8;
-}
-
-/* Liste */
-body.dark li {
-  background: #0f172a;
-  border-left: 4px solid #60a5fa;
-}
-
-/* Textes */
-body.dark h2,
-body.dark h3 {
-  color: #e5e7eb;
-}
-    body {
-  font-family: Arial, sans-serif;
+body {
+  font-family: Arial;
   background: #f4f6f9;
   margin: 0;
   padding: 0;
   color: #333;
 }
 
-h1, h2, h3 {
-  text-align: center;
-  color: #1a1a1a;
-}
+h1,h2,h3 { text-align:center; }
 
-/* Conteneurs */
+/* BOX */
 .box {
-  display: none;
-  max-width: 450px;
-  margin: 20px auto;
-  background: white;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  display:none;
+  width:95%;
+  max-width:500px;
+  margin:15px auto;
+  background:white;
+  padding:15px;
+  border-radius:12px;
+  box-shadow:0 5px 15px rgba(0,0,0,0.1);
 }
 
-/* Inputs */
-input, select {
-  width: 100%;
-  padding: 12px;
-  margin: 8px 0;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  outline: none;
-  transition: 0.2s;
+/* INPUT */
+input,select {
+  width:100%;
+  padding:12px;
+  margin:6px 0;
+  border-radius:8px;
+  border:1px solid #ddd;
 }
 
-input:focus, select:focus {
-  border-color: #4a90e2;
-  box-shadow: 0 0 5px rgba(74,144,226,0.3);
-}
-
-/* Boutons */
+/* BUTTON */
 button {
-  width: 100%;
-  padding: 12px;
-  background: #4a90e2;
-  border: none;
-  color: white;
-  font-weight: bold;
-  border-radius: 8px;
-  cursor: pointer;
-  margin-top: 10px;
-  transition: 0.2s;
+  width:100%;
+  padding:12px;
+  background:#4a90e2;
+  border:none;
+  color:white;
+  border-radius:8px;
+  margin-top:8px;
 }
 
-button:hover {
-  background: #357ab8;
+/* CHAT */
+#chatBox {
+  height:200px;
+  overflow:auto;
+  background:#f1f1f1;
+  padding:10px;
+  border-radius:8px;
 }
 
-/* Home buttons */
-#home button {
-  max-width: 300px;
-  margin: 10px auto;
-  display: block;
+/* MENU BAS */
+#menuBar {
+  position:fixed;
+  bottom:0;
+  left:0;
+  width:100%;
+  background:white;
+  display:flex;
+  justify-content:space-around;
+  padding:10px;
+  box-shadow:0 -2px 10px rgba(0,0,0,0.1);
 }
 
-/* Liste */
-ul {
-  list-style: none;
-  padding: 0;
+#menuBar button {
+  background:none;
+  color:#4a90e2;
+  font-size:18px;
 }
 
-li {
-  background: #fff;
-  margin: 5px 0;
-  padding: 10px;
-  border-radius: 6px;
-  border-left: 4px solid #4a90e2;
+/* FOOTER */
+footer {
+  text-align:center;
+  font-size:12px;
+  padding:10px;
 }
 
-/* Dashboard titre */
-#title {
-  text-align: center;
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-/* Responsive mobile */
-@media (max-width: 600px) {
-  .box {
-    width: 90%;
-    margin: 10px auto;
-  }
-
-  button {
-    font-size: 14px;
-  }
-}
-  </style>
+</style>
 </head>
+
 <body>
 
 <h2>🏫 MULTI-ÉCOLE PRO</h2>
 
 <!-- HOME -->
 <div id="home">
-  <button onclick="toggleDark()">🌙 Mode Noire</button>
-  <br>
-  <h2> BIENVENUE TRES CHERS </h2>
-  <p style="text-align: center"> (Directeur, Enseignant, Elève) </p>
-  <button onclick="show('create')">➕ Créer école</button>
-  <button onclick="show('login')">🔑 Accéder école</button>
-  <br>
-  <h3> Communiquer bien dans votre Etablissement sans perdre vos données </h3>
+<button onclick="toggleDark()">🌙 Mode</button>
+<h3>Bienvenue</h3>
+<button onclick="show('create')">➕ Créer école</button>
+<button onclick="show('login')">🔑 Accéder école</button>
 </div>
 
-<!-- CREER ECOLE -->
+<!-- CREATE -->
 <div id="create" class="box">
-  <h3>Créer une école</h3>
-  <input id="schoolName" placeholder="Nom école">
-  <button onclick="createSchool()">Créer</button>
+<h3>Créer école</h3>
+<input id="schoolName" placeholder="Nom école">
+<button onclick="createSchool()">Créer</button>
 </div>
 
 <!-- LOGIN -->
 <div id="login" class="box">
-  <h3>Accès école</h3>
-  <input id="schoolCode" placeholder="Code école">
-  <button onclick="loginSchool()">Entrer</button>
+<h3>Accès école</h3>
+<input id="schoolCode" placeholder="Code école">
+<button onclick="loginSchool()">Entrer</button>
 </div>
 
 <!-- DASHBOARD -->
 <div id="dashboard" class="box">
 
-  <h3 id="title"></h3>
+<h3 id="title"></h3>
 
-  <select id="role" onchange="changeForm()">
-    <option value="">Choisir rôle</option>
-    <option value="dir">Directeur</option>
-    <option value="ens">Enseignant</option>
-    <option value="elv">Élève</option>
-  </select>
+<select id="role" onchange="changeForm()">
+<option value="">Choisir rôle</option>
+<option value="dir">Directeur</option>
+<option value="ens">Enseignant</option>
+<option value="elv">Élève</option>
+</select>
 
-  <!-- FORM DIRECTEUR -->
-  <div id="formDir" class="box">
-    <input id="d_nom" placeholder="Nom">
-    <input id="d_post" placeholder="Postnom">
-    <input id="d_prenom" placeholder="Prénom">
-    <input id="d_tel" placeholder="Téléphone">
-    <button onclick="saveDir()">Enregistrer Directeur</button>
-  </div>
+<!-- DIRECTEUR -->
+<div id="formDir" class="box">
+<input id="d_nom" placeholder="Nom">
+<input id="d_post" placeholder="Postnom">
+<input id="d_prenom" placeholder="Prénom">
+<input id="d_tel" placeholder="Téléphone">
+<button onclick="saveDir()">Enregistrer Directeur</button>
+</div>
 
-  <!-- FORM ENSEIGNANT -->
-  <div id="formEns" class="box">
-    <input id="e_nom" placeholder="Nom">
-    <input id="e_post" placeholder="Postnom">
-    <input id="e_prenom" placeholder="Prénom">
-    <input id="e_cours" placeholder="Cours">
-    <input id="e_cours2" placeholder="Autre cours (facultatif)">
-    <input id="e_classe" placeholder="Classe">
-    <input id="e_tel" placeholder="Téléphone">
-    <button onclick="saveEns()">Enregistrer Enseignant</button>
-  </div>
+<!-- ENS -->
+<div id="formEns" class="box">
+<input id="e_nom" placeholder="Nom">
+<input id="e_post" placeholder="Postnom">
+<input id="e_prenom" placeholder="Prénom">
+<input id="e_cours" placeholder="Cours">
+<input id="e_cours2" placeholder="Autre cours">
+<input id="e_classe" placeholder="Classe">
+<input id="e_tel" placeholder="Téléphone">
+<button onclick="saveEns()">Enregistrer Enseignant</button>
+</div>
 
-  <!-- FORM ELEVE -->
-  <div id="formElv" class="box">
-    <input id="s_nom" placeholder="Nom">
-    <input id="s_post" placeholder="Postnom">
-    <input id="s_prenom" placeholder="Prénom">
-    <input id="s_classe" placeholder="Classe">
-    <input id="s_addr" placeholder="Adresse">
-    <input id="s_parent" placeholder="N° parent">
-    <button onclick="saveElv()">Enregistrer Élève</button>
-  </div>
+<!-- ELEVE -->
+<div id="formElv" class="box">
+<input id="s_nom" placeholder="Nom">
+<input id="s_post" placeholder="Postnom">
+<input id="s_prenom" placeholder="Prénom">
+<input id="s_classe" placeholder="Classe">
+<input id="s_addr" placeholder="Adresse">
+<input id="s_parent" placeholder="Parent">
+<button onclick="saveElv()">Enregistrer Élève</button>
+</div>
+
+<hr>
+
+<!-- CHAT -->
+<h3>💬 Chat école</h3>
+<div id="chatBox"></div>
+<input id="msg" placeholder="Message">
+<button onclick="sendMsg()">Envoyer</button>
 
 </div>
-  <br> <br> <br> <br>
-<footer>
-  © 2026 Multi-École PRO - Tous droits réservés
-</footer>
+
+<!-- MENU -->
+<div id="menuBar">
+<button onclick="show('home')">🏠</button>
+<button onclick="show('dashboard')">📊</button>
+<button onclick="toggleChat()">💬</button>
+</div>
+
+<footer>© 2026 Multi-École PRO</footer>
+
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getDatabase, ref, push, get, child, set } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import { getDatabase, ref, push, get, child, set, onValue }
+from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-// 🔥 CONFIG FIREBASE
 const firebaseConfig = {
-  apiKey: "AIzaSyDcgJDckF9vejT476nYTGHAwa75dotPkMA",
-  authDomain: "multi-ecole.firebaseapp.com",
-  databaseURL: "https://multi-ecole-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "multi-ecole",
-  storageBucket: "multi-ecole.firebasestorage.app",
-  messagingSenderId: "421233691634",
-  appId: "1:421233691634:web:c6884b8250c8cd1b7b796b"
+apiKey: "AIzaSyDcgJDckF9vejT476nYTGHAwa75dotPkMA",
+authDomain: "multi-ecole.firebaseapp.com",
+databaseURL: "https://multi-ecole-default-rtdb.europe-west1.firebasedatabase.app",
+projectId: "multi-ecole",
+storageBucket: "multi-ecole.firebasestorage.app",
+messagingSenderId: "421233691634",
+appId: "1:421233691634:web:c6884b8250c8cd1b7b796b"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -259,114 +206,86 @@ const db = getDatabase(app);
 
 let currentSchool = "";
 
-// 🔁 navigation
-window.show = function(page){
-  document.querySelectorAll(".box").forEach(b => b.style.display="none");
-  document.getElementById(page).style.display="block";
+/* NAV */
+window.show = function(p){
+document.querySelectorAll(".box").forEach(b=>b.style.display="none");
+document.getElementById(p).style.display="block";
 }
 
-// 🏫 créer école
+/* CREATE SCHOOL */
 window.createSchool = function(){
-  const name = document.getElementById("schoolName").value;
-  const code = name.toLowerCase().replace(/\s/g,'') + "_" + Math.floor(Math.random()*1000);
+const name = schoolName.value;
+const code = name.toLowerCase().replace(/\s/g,"")+"_"+Math.floor(Math.random()*999);
 
-  get(child(ref(db), "ecoles/" + code)).then(snap=>{
-    if(snap.exists()){
-      alert("École existe déjà !");
-    } else {
-      set(ref(db,"ecoles/"+code),{
-        name:name,
-        code:code
-      });
-
-      alert("École créée. Code: " + code);
-    }
-  });
+set(ref(db,"ecoles/"+code),{name,code});
+alert("Code école: "+code);
 }
 
-// 🔑 login
+/* LOGIN */
 window.loginSchool = function(){
-  const code = document.getElementById("schoolCode").value;
+const code = schoolCode.value;
 
-  get(child(ref(db),"ecoles/"+code)).then(snap=>{
-    if(snap.exists()){
-      currentSchool = code;
-      document.getElementById("title").innerText = "École: " + snap.val().name;
-      show("dashboard");
-    } else {
-      alert("École introuvable !");
-    }
-  });
+get(child(ref(db),"ecoles/"+code)).then(snap=>{
+if(snap.exists()){
+currentSchool=code;
+title.innerText="École: "+snap.val().name;
+show("dashboard");
+startChat();
+}else alert("Introuvable");
+});
 }
 
-// 🔄 changer formulaire
+/* FORMS */
 window.changeForm = function(){
-  document.getElementById("formDir").style.display="none";
-  document.getElementById("formEns").style.display="none";
-  document.getElementById("formElv").style.display="none";
+formDir.style.display="none";
+formEns.style.display="none";
+formElv.style.display="none";
 
-  const r = document.getElementById("role").value;
-
-  if(r=="dir") document.getElementById("formDir").style.display="block";
-  if(r=="ens") document.getElementById("formEns").style.display="block";
-  if(r=="elv") document.getElementById("formElv").style.display="block";
+if(role.value=="dir") formDir.style.display="block";
+if(role.value=="ens") formEns.style.display="block";
+if(role.value=="elv") formElv.style.display="block";
 }
 
-// 🔐 codes
-function gen(prefix, end){
-  return prefix + "-" + Math.random().toString(36).substring(2,7).toUpperCase() + "-" + end;
+/* CODES */
+function code(p,s){
+return p+"-"+Math.random().toString(36).substring(2,6).toUpperCase()+"-"+s;
 }
 
-// 👨‍🏫 directeur
-window.saveDir = function(){
-  const data = {
-    nom:d_nom.value,
-    postnom:d_post.value,
-    prenom:d_prenom.value,
-    tel:d_tel.value,
-    role:"directeur",
-    code:gen("DIR","EUR")
-  };
-  push(ref(db,"ecoles/"+currentSchool+"/directeurs"),data);
-  alert("Directeur enregistré");
+/* SAVE */
+window.saveDir = ()=>push(ref(db,"ecoles/"+currentSchool+"/dir"),{...getDir(),code:code("DIR","EUR")});
+window.saveEns = ()=>push(ref(db,"ecoles/"+currentSchool+"/ens"),{...getEns(),code:code("ENS","ENT")});
+window.saveElv = ()=>push(ref(db,"ecoles/"+currentSchool+"/elv"),{...getElv(),code:code("ELV","ES")});
+
+function getDir(){return{nom:d_nom.value,post:d_post.value,prenom:d_prenom.value,tel:d_tel.value}}
+function getEns(){return{nom:e_nom.value,post:e_post.value,prenom:e_prenom.value,cours:e_cours.value,classe:e_classe.value,tel:e_tel.value}}
+function getElv(){return{nom:s_nom.value,post:s_post.value,prenom:s_prenom.value,classe:s_classe.value,addr:s_addr.value,parent:s_parent.value}}
+
+/* CHAT */
+window.sendMsg = function(){
+push(ref(db,"ecoles/"+currentSchool+"/chat"),{text:msg.value});
+msg.value="";
 }
 
-// 👩‍🏫 enseignant
-window.saveEns = function(){
-  const data = {
-    nom:e_nom.value,
-    postnom:e_post.value,
-    prenom:e_prenom.value,
-    cours:e_cours.value,
-    cours2:e_cours2.value,
-    classe:e_classe.value,
-    tel:e_tel.value,
-    role:"enseignant",
-    code:gen("ENS","ENT")
-  };
-  push(ref(db,"ecoles/"+currentSchool+"/enseignants"),data);
-  alert("Enseignant enregistré");
+function startChat(){
+const chatRef = ref(db,"ecoles/"+currentSchool+"/chat");
+onValue(chatRef,snap=>{
+chatBox.innerHTML="";
+snap.forEach(c=>{
+let d=document.createElement("div");
+d.innerHTML="💬 "+c.val().text;
+chatBox.appendChild(d);
+});
+chatBox.scrollTop=chatBox.scrollHeight;
+});
 }
 
-// 👨‍🎓 élève
-window.saveElv = function(){
-  const data = {
-    nom:s_nom.value,
-    postnom:s_post.value,
-    prenom:s_prenom.value,
-    classe:s_classe.value,
-    adresse:s_addr.value,
-    parent:s_parent.value,
-    role:"eleve",
-    code:gen("ELV","ES")
-  };
-  push(ref(db,"ecoles/"+currentSchool+"/eleves"),data);
-  alert("Élève enregistré");
+/* DARK */
+window.toggleDark = ()=>document.body.classList.toggle("dark");
+
+/* CHAT TOGGLE */
+window.toggleChat = ()=>{
+chatBox.style.display = chatBox.style.display=="none"?"block":"none";
 }
-  
-  window.toggleDark = function () {
-  document.body.classList.toggle("dark");
-};
 
 </script>
 
