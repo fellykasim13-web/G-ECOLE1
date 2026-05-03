@@ -1,130 +1,325 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Système Scolaire</title>
-
-<!-- FIREBASE -->
-<script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-database-compat.js"></script>
-
-<style>
-/* ================= GLOBAL ================= */
-body{
-  margin:0;
-  font-family:Arial;
-  background:#0b141a;
-  color:white;
-}
-
-/* ================= CENTRAGE ================= */
-.page{
-  display:none;
-  min-height:100vh;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  text-align:center;
-  padding:15px;
-}
-
-.active{
-  display:flex;
-}
-
-/* ================= TITRES ================= */
-h1,h2{
-  color:#25D366;
-}
-
-/* ================= INPUTS ================= */
-input, select, textarea{
-  width:90%;
-  max-width:400px;
-  padding:12px;
-  margin:8px;
-  border:none;
-  border-radius:10px;
-  outline:none;
-}
-
-/* ================= BUTTONS ================= */
-button{
-  width:90%;
-  max-width:300px;
-  padding:12px;
-  margin:8px;
-  border:none;
-  border-radius:10px;
-  background:#25D366;
-  color:black;
-  font-weight:bold;
-}
-
-/* ================= MOBILE ADAPT ================= */
-@media (max-width:600px){
-  h1,h2{ font-size:20px; }
-  button{ width:95%; }
-}
-</style>
-</head>
-
-<body>
-
-<!-- ================= HOME ================= -->
-<div id="home" class="page active">
-  <h1>Système Scolaire</h1>
-
-  <button onclick="go('login')">Connexion</button>
-  <button onclick="go('register')">Inscription</button>
-</div>
-
-<!-- ================= LOGIN ================= -->
-<div id="login" class="page">
-  <h2>Connexion</h2>
-
-  <input id="logEmail" placeholder="Email">
-  <input id="logPass" type="password" placeholder="Mot de passe">
-
-  <button onclick="login()">Se connecter</button>
-
-  <p id="error" style="color:red;"></p>
-
-  <button onclick="go('home')">Retour</button>
-</div>
-
-<!-- ================= REGISTER ================= -->
-<div id="register" class="page">
-  <h2>Inscription</h2>
-
-  <input id="regName" placeholder="Nom">
-  <input id="regEmail" placeholder="Email">
-  <input id="regPass" type="password" placeholder="Mot de passe">
-
-  <select id="regRole">
-    <option value="eleve">Élève</option>
-    <option value="enseignant">Enseignant</option>
-  </select>
-
-  <button onclick="register()">Créer compte</button>
-
-  <button onclick="go('home')">Retour</button>
-</div>
-
-<!-- ================= DASHBOARD ================= -->
-<div id="dashboard" class="page">
-  <h2 id="welcome"></h2>
-  <p id="roleText"></p>
-
-  <button onclick="logout()">Déconnexion</button>
-</div>
-
-<script>
-/* ================= FIREBASE ================= */
- const firebaseConfig = {  
+<!DOCTYPE html>  
+<html lang="fr">  
+<head>  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>  
+<meta charset="UTF-8">  
+<title>Système Eleves / Enseignants</title>  
+  
+<script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-app-compat.js"></script>  
+<script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-auth-compat.js"></script>  
+<script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-database-compat.js"></script>  
+  
+<style>  
+body{  
+  margin:0;  
+  font-family: Arial, sans-serif;  
+  background:#0b141a;  
+  color:white;  
+}  
+.me{  
+  background:#25D366;  
+  color:black;  
+  margin-left:auto;  
+  text-align:right;  
+}  
+  
+.other{  
+  background:#1f2c34;  
+  margin-right:auto;  
+}  
+  
+/* PAGES */  
+.page{  
+  display:none;  
+  min-height:100vh;  
+  padding:20px;  
+  flex-direction:column;  
+  justify-content:center;  
+  align-items:center;  
+  text-align:center;  
+}  
+  
+.active{  
+  display:flex;  
+}  
+  
+/* HEADER STYLE */  
+h2{  
+  color:#25D366;  
+}  
+  
+/* INPUT STYLE WHATSAPP */  
+input, select{  
+  width:80%;  
+  padding:12px;  
+  margin:8px 0;  
+  border-radius:10px;  
+  border:none;  
+  outline:none;  
+}  
+  
+/* BOUTONS */  
+button{  
+  width:50%;  
+  padding:12px;  
+  margin:8px 0;  
+  border:none;  
+  border-radius:10px;  
+  background:#25D366;  
+  color:black;  
+  font-weight:bold;  
+  align-justify : center  
+}  
+  
+/* DASHBOARD BOXES */  
+#eleveBox, #teacherBox{  
+  background:#111b21;  
+  padding:15px;  
+  border-radius:15px;  
+  margin-top:10px;  
+}  
+  
+/* CHAT STYLE (future) */  
+.chatBox{  
+  height:60vh;  
+  overflow-y:auto;  
+  background:#0f1a20;  
+  padding:10px;  
+  border-radius:15px;  
+}  
+  
+/* BULLES MESSAGES (préparé pour chat) */  
+.msg{  
+  padding:10px;  
+  margin:5px;  
+  border-radius:10px;  
+  max-width:70%;  
+}  
+  
+.me{  
+  background:#25D366;  
+  color:black;  
+  margin-left:auto;  
+}  
+  
+.other{  
+  background:#1f2c34;  
+}  
+</style>  
+</head>  
+  
+<body>  
+  
+<!-- HOME -->  
+<div id="home" class="page active">  
+<h2>Bienvenue</h2>  
+  <br> <br><br> <br><br> <br>  
+<button onclick="go('login')">Ouvrir</button>  
+  <br> <br><br> <br><br> <br>  
+  <p style="color:#aaa;">  
+  Pas de compte ?  
+  <span onclick="go('register')" style="color:#25D366; cursor:pointer;">  
+    S'inscrire  
+  </span>  
+</p>  
+</div>  
+  
+<!-- LOGIN -->  
+<div id="login" class="page">  
+<h2>Connexion</h2>  
+  
+<input id="logEmail" placeholder="Email">  
+<input id="logPass" type="password" placeholder="Mot de passe">  
+  
+<button onclick="login()">Se connecter</button>  
+<button onclick="go('home')">Retour</button>  
+  
+<p id="loginError" style="color:red;"></p>  
+</div>  
+  
+<!-- REGISTER -->  
+<div id="register" class="page">  
+<h2>Inscription</h2>  
+  
+<input id="regName" placeholder="Nom">  
+<input id="regEmail" placeholder="Email">  
+<input id="regPass" type="password" placeholder="Mot de passe (min 6)">  
+  
+<select id="regRole">  
+<option value="eleve">Élève</option>  
+<option value="enseignant">Enseignant</option>  
+</select>  
+  
+<button onclick="register()">Créer compte</button>  
+<button onclick="go('login')">Ouvrir</button>  
+</div>  
+  
+<!-- DASHBOARD -->  
+<div id="dashboard" class="page">  
+<h2 id="welcome"></h2>  
+<p id="roleText"></p>  
+  
+<div id="eleveBox" style="display:none;">  
+<h3>Élève</h3>  
+<button onclick="openPage('notes')">Notes</button>  
+<button onclick="openPage('cours')">Cours</button>  
+<button onclick="openPage('chat')">Chat</button>  
+</div>  
+  
+<div id="teacherBox" style="display:none;">  
+<h3>Enseignant</h3>  
+<button onclick="openPage('addNotes')">Ajouter notes</button>  
+<button onclick="openPage('addCours')">Ajouter cours</button>  
+<button onclick="openPage('fiche')">📄 Fiche de préparation</button>  
+<button onclick="openPage('chat')">Chat</button>  
+</div>  
+  
+<button onclick="logout()">Déconnexion</button>  
+</div>  
+  
+<!-- PAGES VIDES -->  
+<div id="notes" class="page"><h2>Notes</h2><button onclick="back()">Retour</button></div>  
+<div id="cours" class="page"><h2>Cours</h2><button onclick="back()">Retour</button></div>  
+  
+  <!-- ====== CHAT ======= -->   
+<div id="chat" class="page">  
+  
+<h2>Chat</h2>  
+  
+<p id="chatTitle">Discuter en temps réel</p>  
+  
+<!-- LISTE DISCUSSIONS -->  
+<div id="chatList"></div>  
+  
+<!-- 🔥 BOUTON + -->  
+<div onclick="toggleMenu()"   
+style="  
+position:fixed;  
+bottom:20px;  
+right:20px;  
+width:55px;  
+height:55px;  
+border-radius:50%;  
+background:#25D366;  
+color:black;  
+font-size:30px;  
+display:flex;  
+align-items:center;  
+justify-content:center;  
+cursor:pointer;  
+">  
++  
+</div>  
+  
+<!-- MENU -->  
+<div id="menuPlus" style="  
+position:fixed;  
+bottom:90px;  
+right:20px;  
+background:#111b21;  
+padding:10px;  
+border-radius:10px;  
+display:none;  
+">  
+  
+<button onclick="newDiscussion()">💬 Nouvelle discussion</button>  
+<button onclick="openGroups()">👨‍👩‍👧 Groupe</button>  
+<button onclick="openSettings()">⚙️ Paramètres</button>  
+  
+</div>  
+  
+<button onclick="back()">Retour</button>  
+</div>  
+    
+    
+  <!-- ======= DISCUTION ===== -->  
+<div id="discussion" class="page">  
+  
+<h2 id="chatWith"></h2>  
+  
+<div class="chatBox" id="chatBox"></div>  
+  
+<input id="msgInput" placeholder="Message...">  
+<button onclick="sendMessage()">Envoyer</button>  
+  
+<button onclick="go('chat')">Retour</button>  
+</div>  
+  <!-- ====== NOUVELLE DISCUTION ===== -->   
+  <div id="newChat" class="page">  
+  
+<h2>Nouvelle discussion</h2>  
+  
+<div id="usersBox"></div>  
+  
+<button onclick="go('chat')">Retour</button>  
+</div>  
+    
+  <!-- ===== PAGE GROUPE ====== -->  
+  <div id="groupsPage" class="page">  
+<h2>Groupes (à venir)</h2>  
+<button onclick="go('chat')">Retour</button>  
+</div>  
+  
+<div id="settingsPage" class="page">  
+<h2>Paramètres (à venir)</h2>  
+<button onclick="go('chat')">Retour</button>  
+</div>  
+  
+  <!-- ==== FICHE DE PREPARATION ==== -->   
+  <div id="fiche" class="page">  
+  
+<h2>Fiche de préparation</h2>  
+  
+<input id="matiere" placeholder="Matière">  
+<input id="classe" placeholder="Classe">  
+<input id="date" type="date">  
+<input id="heure" type="time">  
+<input id="duree" placeholder="Durée (ex: 2h)">  
+  
+<textarea id="objectif" placeholder="Objectifs" style="width:80%;height:60px;"></textarea>  
+<textarea id="prerequis" placeholder="Prérequis" style="width:80%;height:60px;"></textarea>  
+<textarea id="materiel" placeholder="Matériel didactique" style="width:80%;height:60px;"></textarea>  
+  
+<textarea id="intro" placeholder="Introduction" style="width:80%;height:60px;"></textarea>  
+<textarea id="developpement" placeholder="Déroulement / Activités" style="width:80%;height:100px;"></textarea>  
+<textarea id="conclusion" placeholder="Conclusion" style="width:80%;height:60px;"></textarea>  
+  
+<textarea id="evaluation" placeholder="Évaluation" style="width:80%;height:60px;"></textarea>  
+<textarea id="remarque" placeholder="Remarques" style="width:80%;height:60px;"></textarea>  
+  
+<button onclick="saveFiche()">Enregistrer</button>  
+  
+<hr style="width:80%;">  
+  
+<input id="searchFiche" placeholder="Rechercher..." oninput="searchFiches()">  
+<select onchange="filterMatiere(this.value)">  
+<option value="">Toutes matières</option>  
+<option>Math</option>  
+<option>Français</option>  
+<option>SVT</option>  
+</select>  
+  
+<h3>Mes fiches</h3>  
+<div id="ficheList"></div>  
+  
+<button onclick="back()">Retour</button>  
+  
+</div>  
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+   
+<script>  
+  console.log("SCRIPT CHARGÉ");  
+// ================= FIREBASE =================  
+const firebaseConfig = {  
   apiKey: "AIzaSyDcgJDckF9vejT476nYTGHAwa75dotPkMA",  
   authDomain: "multi-ecole.firebaseapp.com",  
   databaseURL: "https://multi-ecole-default-rtdb.europe-west1.firebasedatabase.app",  
@@ -132,79 +327,676 @@ button{
   storageBucket: "multi-ecole.firebasestorage.app",  
   messagingSenderId: "421233691634",  
   appId: "1:421233691634:web:c6884b8250c8cd1b7b796b"  
-};
-
-firebase.initializeApp(firebaseConfig);
-
-const auth = firebase.auth();
-const db = firebase.database();
-
-let currentUser = null;
-
-/* ================= NAVIGATION ================= */
-function go(page){
-  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
-  document.getElementById(page).classList.add("active");
+};  
+  
+firebase.initializeApp(firebaseConfig);  
+  
+const auth = firebase.auth();  
+const db = firebase.database();  
+let currentUser = null;  
+let usersList = [];  
+let currentChat = null;  
+  
+// ================= NAVIGATION =================  
+function go(page){  
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));  
+  document.getElementById(page).classList.add("active");  
+}  
+  
+function back(){  
+  go("dashboard");  
+}  
+  
+// ================= INSCRIPTION =================  
+function register(){  
+  let name = document.getElementById("regName").value;  
+  let email = document.getElementById("regEmail").value;  
+  let pass = document.getElementById("regPass").value;  
+  let role = document.getElementById("regRole").value;  
+  
+  let photo = "https://i.imgur.com/1X7Qq7C.png"; // default avatar  
+  
+  auth.createUserWithEmailAndPassword(email, pass)  
+  .then(user => {  
+    db.ref("users/" + user.user.uid).set({  
+      name,  
+      email,  
+      role,  
+      photo  
+    });  
+  
+    alert("Compte créé !");  
+    go("login");  
+  });  
+}  
+  
+// ================= LOGIN (CORRIGÉ) =================  
+function login(){  
+  let email = document.getElementById("logEmail").value;  
+  let pass = document.getElementById("logPass").value;  
+  
+  document.getElementById("loginError").innerText = "";  
+  
+  if(email === "" || pass === ""){  
+    document.getElementById("loginError").innerText = "Remplis tous les champs";  
+    return;  
+  }  
+  
+  auth.signInWithEmailAndPassword(email, pass)  
+  .then(user => {  
+    loadUser(user.user.uid);  
+  })  
+  .catch(err => {  
+    document.getElementById("loginError").innerText = err.message;  
+    console.log("LOGIN ERROR:", err);  
+  });  
+}  
+  
+// ================= CHARGER USER =================  
+function loadUser(uid){  
+  currentUser = uid;  
+  
+  db.ref("users/" + uid).once("value").then(snap => {  
+    let data = snap.val();  
+  
+    document.getElementById("welcome").innerText = "Bienvenue " + data.name;  
+    document.getElementById("roleText").innerText = "Rôle : " + data.role;  
+  
+    document.getElementById("eleveBox").style.display = "none";  
+    document.getElementById("teacherBox").style.display = "none";  
+  
+    if(data.role === "eleve"){  
+      document.getElementById("eleveBox").style.display = "block";  
+    } else {  
+      document.getElementById("teacherBox").style.display = "block";  
+    }  
+  
+    loadUsers(); // 👈 AJOUT CHAT  
+    go("dashboard");  
+  });  
+}  
+function loadUsers(){  
+  
+  // 🔥 mettre l'utilisateur actuel en ligne  
+  db.ref("users/" + currentUser).update({  
+    online: true  
+  });  
+  
+  // 🔥 hors ligne quand quitte  
+  window.onbeforeunload = () => {  
+    db.ref("users/" + currentUser).update({online:false});  
+  };  
+  
+  // charger liste users  
+  db.ref("users").once("value").then(snap => {  
+    usersList = snap.val();  
+    console.log("Users loaded:", usersList);  
+  });  
+}  
+// ================= LOGOUT =================  
+function logout(){  
+  auth.signOut();  
+  go("home");  
+}  
+function openPage(page){  
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));  
+  document.getElementById(page).classList.add("active");  
+  
+  if(page === "chat"){  
+    loadContacts();  
+  }  
+  
+  // 🔥 AJOUT IMPORTANT  
+  if(page === "fiche"){  
+    loadFiches();  
+  }  
+}  
+function showUsers(){  
+  let box = document.getElementById("usersBox");  
+  box.innerHTML = "";  
+  
+  for(let uid in usersList){  
+    if(uid !== currentUser){  
+      let u = usersList[uid];  
+  
+      let div = document.createElement("div");  
+      div.innerHTML = `  
+        <button onclick="openChat('${uid}')">  
+          ${u.name} (${u.email})  
+        </button>  
+      `;  
+  
+      box.appendChild(div);  
+    }  
+  }  
+}  
+function openChat(uid){  
+  
+  currentChat = uid;  
+  go("chat");  
+  
+  let chatId = getChatId(currentUser, uid);  
+  
+  // 🔥 message livré  
+  db.ref("chats/" + chatId + "/messages").once("value", snap => {  
+    snap.forEach(msg => {  
+      if(msg.val().sender !== currentUser){  
+        msg.ref.update({status:"delivered"});  
+      }  
+    });  
+  });  
+  
+  markAsRead(chatId);  
+  loadMessages();  
+}  
+function sendMessage(){  
+  let text = document.getElementById("msgInput").value;  
+  if(text === "") return;  
+  
+  let chatId = getChatId(currentUser, currentChat);  
+  
+  db.ref("chats/" + chatId + "/messages").push({  
+    sender: currentUser,  
+    text,  
+    time: Date.now(),  
+    status: "sent"  
+  });  
+  
+  document.getElementById("msgInput").value = "";  
+}  
+  function getChatId(a,b){  
+  return a < b ? a+"_"+b : b+"_"+a;  
+}  
+function loadMessages(){  
+  let chatId = getChatId(currentUser, currentChat);  
+  
+  db.ref("chats/" + chatId + "/messages").on("value", snap => {  
+    let box = document.getElementById("chatBox");  
+    box.innerHTML = "";  
+  
+    snap.forEach(msgSnap => {  
+      let m = msgSnap.val();  
+  
+      let div = document.createElement("div");  
+  
+      div.className = "msg " + (m.sender === currentUser ? "me" : "other");  
+  
+      let tick = "";  
+  
+if(m.status === "sent") tick = "✓";  
+if(m.status === "delivered") tick = "✓✓";  
+if(m.status === "read") tick = "✓✓💙";  
+        
+      div.innerHTML = `  
+  ${m.text}<br>  
+  <small>${tick}</small>  
+  <br>  
+  <span style="color:red;cursor:pointer;font-size:12px;"  
+  onclick="deleteMsg('${msgSnap.key}','${chatId}')">  
+  Supprimer  
+  </span>  
+`;  
+  
+      box.appendChild(div);  
+    });  
+  });  
+}  
+    
+function markAsRead(chatId){  
+  db.ref("chats/" + chatId + "/messages")  
+  .once("value", snap => {  
+    snap.forEach(msg => {  
+      if(msg.val().sender !== currentUser){  
+        msg.ref.update({status:"read"});  
+      }  
+    });  
+  });  
+}  
+  function exportPDF(id){  
+  db.ref("fiches/" + currentUser + "/" + id).once("value").then(snap => {  
+  
+    let d = snap.val();  
+    const { jsPDF } = window.jspdf;  
+    let doc = new jsPDF();  
+  
+    doc.text("Fiche de préparation", 10, 10);  
+    doc.text("Enseignant: " + d.teacher, 10, 20);  
+    doc.text("Matière: " + d.matiere, 10, 30);  
+    doc.text("Classe: " + d.classe, 10, 40);  
+  
+    doc.save("fiche.pdf");  
+  });  
+}  
+    
+    
+function loadContacts(){  
+  let box = document.getElementById("contactsBox");  
+  box.innerHTML = "<h3>Mes contacts</h3>";  
+  
+  db.ref("contacts/" + currentUser).once("value").then(snap => {  
+  
+    if(!snap.exists()){  
+      box.innerHTML += "<p>Aucun contact</p>";  
+      return;  
+    }  
+  
+    snap.forEach(c => {  
+      let uid = c.key;  
+  
+      db.ref("users/" + uid).once("value").then(uSnap => {  
+        let u = uSnap.val();  
+  
+        let div = document.createElement("div");  
+  
+        div.style.display = "flex";  
+        div.style.alignItems = "center";  
+        div.style.margin = "10px";  
+        div.style.padding = "10px";  
+        div.style.background = "#111b21";  
+        div.style.borderRadius = "10px";  
+  
+        div.innerHTML = `  
+          <img src="${u.photo}" width="40" height="40"  
+          style="border-radius:50%;margin-right:10px;">  
+            
+          <div style="flex:1;">  
+            <b>${u.name}</b><br>  
+            <small>${u.email}</small>  
+          </div>  
+        `;  
+  
+        // 👉 CLIQUER ouvre chat  
+        div.onclick = () => openChat(uid);  
+  
+        box.appendChild(div);  
+      });  
+    });  
+  });  
+}  
+function toggleMenu(){  
+  let m = document.getElementById("menuPlus");  
+  m.style.display = (m.style.display === "block") ? "none" : "block";  
+}  
+function openContacts(){  
+  document.getElementById("menuPlus").style.display = "none";  
+  
+  let email = prompt("Entrer email du contact");  
+  
+  if(!email) return;  
+  
+  db.ref("users").once("value").then(snap => {  
+    snap.forEach(u => {  
+      let user = u.val();  
+      let uid = u.key;  
+  
+      if(user.email === email){  
+  
+        // 🔥 AJOUT CONTACT  
+        db.ref("contacts/" + currentUser + "/" + uid).set(true);  
+  
+        alert("Contact ajouté !");  
+        loadContacts();  
+      }  
+    });  
+  });  
+}  
+  
+// filtre recherche  
+function filterContacts(text){  
+  db.ref("users").once("value").then(snap => {  
+    let box = document.getElementById("contactsBox");  
+    box.innerHTML = "";  
+  
+    snap.forEach(u => {  
+      let user = u.val();  
+      let uid = u.key;  
+  
+      if(user.name.toLowerCase().includes(text.toLowerCase())){  
+        renderUser(box, user, uid);  
+      }  
+    });  
+  });  
+}  
+    
+function renderUser(box, u, uid){  
+  
+  if(uid === currentUser) return;  
+  
+  let div = document.createElement("div");  
+  
+  div.style.display = "flex";  
+  div.style.alignItems = "center";  
+  div.style.margin = "10px";  
+  div.style.padding = "10px";  
+  div.style.background = "#111b21";  
+  div.style.borderRadius = "10px";  
+  
+  div.innerHTML = `  
+    <div style="position:relative;margin-right:10px;">  
+      <img src="${u.photo}" width="40" height="40" style="border-radius:50%;">  
+      <div style="  
+        width:10px;  
+        height:10px;  
+        background:${u.online ? 'lime' : 'gray'};  
+        border-radius:50%;  
+        position:absolute;  
+        bottom:0;  
+        right:0;  
+      "></div>  
+    </div>  
+  
+    <div style="flex:1;">  
+      <b>${u.name}</b><br>  
+      <small>${u.email}</small>  
+    </div>  
+  
+    <button onclick="openChat('${uid}')">Chat</button>  
+  `;  
+  
+  box.appendChild(div);  
+}  
+    
+function openGroups(){  
+  document.getElementById("menuPlus").style.display = "none";  
+  
+  let name = prompt("Nom du groupe");  
+  if(!name) return;  
+  
+  let members = [currentUser];  
+  
+  db.ref("users").once("value").then(snap => {  
+    snap.forEach(u => {  
+      let user = u.val();  
+      let uid = u.key;  
+  
+      if(uid !== currentUser){  
+        if(confirm("Ajouter " + user.name + " ?")){  
+          members.push(uid);  
+        }  
+      }  
+    });  
+  
+    let id = "group_" + Date.now();  
+  
+    db.ref("groups/" + id).set({  
+      name,  
+      members  
+    });  
+  
+    alert("Groupe créé !");  
+  });  
+}  
+    
+function openSettings(){  
+  document.getElementById("menuPlus").style.display = "none";  
+  
+  let newName = prompt("Changer ton nom");  
+  if(!newName) return;  
+  
+  db.ref("users/" + currentUser).update({  
+    name: newName  
+  });  
+  
+  alert("Profil mis à jour !");  
+}  
+function deleteMsg(msgId, chatId){  
+  db.ref("chats/" + chatId + "/messages/" + msgId).remove();  
+}  
+  function newDiscussion(){  
+  document.getElementById("menuPlus").style.display = "none";  
+  go("newChat");  
+  
+  let box = document.getElementById("usersBox");  
+  box.innerHTML = "";  
+  
+  db.ref("users").once("value").then(snap => {  
+    snap.forEach(u => {  
+      let user = u.val();  
+      let uid = u.key;  
+  
+      if(uid !== currentUser){  
+  
+        let div = document.createElement("div");  
+  
+        div.style.background = "#111b21";  
+        div.style.margin = "10px";  
+        div.style.padding = "10px";  
+        div.style.borderRadius = "10px";  
+  
+        div.innerHTML = `  
+          <b>${user.name}</b><br>  
+          <small>${user.email}</small>  
+        `;  
+  
+        div.onclick = () => startChat(uid, user.name);  
+  
+        box.appendChild(div);  
+      }  
+    });  
+  });  
+}  
+    
+  function startChat(uid, name){  
+  currentChat = uid;  
+  
+  document.getElementById("chatWith").innerText = name;  
+  
+  go("discussion");  
+  
+  loadMessages();  
+}  
+  function openGroups(){  
+  go("groupsPage");  
+}  
+  
+function openSettings(){  
+  go("settingsPage");  
+}  
+// ================= FICHE DE PREPARATION =================  
+function saveFiche(){  
+  
+  let id = editFicheId || ("fiche_" + Date.now());  
+  
+  db.ref("users/" + currentUser).once("value").then(userSnap => {  
+  
+    let teacherName = userSnap.val().name;  
+  
+    let data = {  
+      teacher: teacherName,  
+      matiere: matiere.value,  
+      classe: classe.value,  
+      date: date.value,  
+      heure: heure.value,  
+      duree: duree.value,  
+      objectif: objectif.value,  
+      prerequis: prerequis.value,  
+      materiel: materiel.value,  
+      intro: intro.value,  
+      developpement: developpement.value,  
+      conclusion: conclusion.value,  
+      evaluation: evaluation.value,  
+      remarque: remarque.value  
+    };  
+  
+    db.ref("fiches/" + currentUser + "/" + id).set(data);  
+  
+    alert("Fiche enregistrée ✅");  
+  
+    editFicheId = null;  
+    clearForm();  
+    loadFiches();  
+  });  
 }
-
-/* ================= REGISTER ================= */
-function register(){
-  let name = document.getElementById("regName").value;
-  let email = document.getElementById("regEmail").value;
-  let pass = document.getElementById("regPass").value;
-  let role = document.getElementById("regRole").value;
-
-  if(!name || !email || !pass) return alert("Remplis tous les champs");
-
-  auth.createUserWithEmailAndPassword(email, pass)
-  .then((cred) => {
-
-    db.ref("users/" + cred.user.uid).set({
-      name,
-      email,
-      role
-    });
-
-    alert("Compte créé !");
-    go("login");
-  })
-  .catch(err => alert(err.message));
-}
-
-/* ================= LOGIN ================= */
-function login(){
-  let email = document.getElementById("logEmail").value;
-  let pass = document.getElementById("logPass").value;
-
-  auth.signInWithEmailAndPassword(email, pass)
-  .then((cred) => {
-    loadUser(cred.user.uid);
-  })
-  .catch(err => {
-    document.getElementById("error").innerText = err.message;
-  });
-}
-
-/* ================= LOAD USER ================= */
-function loadUser(uid){
-  currentUser = uid;
-
-  db.ref("users/" + uid).once("value").then(snap => {
-    let u = snap.val();
-
-    document.getElementById("welcome").innerText = "Bienvenue " + u.name;
-    document.getElementById("roleText").innerText = "Rôle : " + u.role;
-
-    go("dashboard");
-  });
-}
-
-/* ================= LOGOUT ================= */
-function logout(){
-  auth.signOut();
-  go("home");
-}
-</script>
-
-</body>
+  // ================= FICHE SYSTEM =================  
+  
+let editFicheId = null;  
+  
+// 🔥 ENREGISTRER OU MODIFIER  
+function saveFiche(){  
+  
+  let matiere = document.getElementById("matiere").value;  
+  let classe = document.getElementById("classe").value;  
+  let date = document.getElementById("date").value;  
+  let objectif = document.getElementById("objectif").value;  
+  let contenu = document.getElementById("contenu").value;  
+  let evaluation = document.getElementById("evaluation").value;  
+  
+  if(matiere === "" || classe === ""){  
+    alert("Remplis matière et classe");  
+    return;  
+  }  
+  
+  let id = editFicheId || ("fiche_" + Date.now());  
+  
+  db.ref("fiches/" + currentUser + "/" + id).set({  
+    matiere,  
+    classe,  
+    date,  
+    objectif,  
+    contenu,  
+    evaluation  
+  });  
+  
+  alert(editFicheId ? "Fiche modifiée ✅" : "Fiche enregistrée ✅");  
+  
+  editFicheId = null;  
+  clearForm();  
+  loadFiches();  
+}  
+  
+// 🔥 CHARGER LISTE  
+function renderFiche(id, d){  
+  
+  let box = document.getElementById("ficheList");  
+  
+  let div = document.createElement("div");  
+  
+  div.style.background = "#111b21";  
+  div.style.padding = "10px";  
+  div.style.margin = "10px";  
+  div.style.borderRadius = "10px";  
+  
+  div.innerHTML = `  
+    <b>${d.matiere}</b> - ${d.classe}<br>  
+    <small>${d.date} | ${d.teacher}</small><br><br>  
+  
+    <button onclick="editFiche('${id}')">✏️</button>  
+    <button onclick="deleteFiche('${id}')">🗑</button>  
+    <button onclick="printFiche('${id}')">🖨</button>  
+  `;  
+  
+  box.appendChild(div);  
+}  
+  
+// 🔥 MODIFIER  
+function editFiche(id){  
+  
+  db.ref("fiches/" + currentUser + "/" + id).once("value").then(snap => {  
+    let d = snap.val();  
+  
+    document.getElementById("matiere").value = d.matiere;  
+    document.getElementById("classe").value = d.classe;  
+    document.getElementById("date").value = d.date;  
+    document.getElementById("objectif").value = d.objectif;  
+    document.getElementById("contenu").value = d.contenu;  
+    document.getElementById("evaluation").value = d.evaluation;  
+  
+    editFicheId = id;  
+  
+    alert("Modification en cours...");  
+  });  
+}  
+  
+// 🔥 SUPPRIMER  
+function deleteFiche(id){  
+  
+  if(confirm("Supprimer cette fiche ?")){  
+    db.ref("fiches/" + currentUser + "/" + id).remove();  
+    loadFiches();  
+  }  
+}  
+  
+// 🔥 VIDER FORMULAIRE  
+function clearForm(){  
+  document.getElementById("matiere").value = "";  
+  document.getElementById("classe").value = "";  
+  document.getElementById("date").value = "";  
+  document.getElementById("objectif").value = "";  
+  document.getElementById("contenu").value = "";  
+  document.getElementById("evaluation").value = "";  
+}  
+function searchFiches(){  
+  let text = document.getElementById("searchFiche").value.toLowerCase();  
+  
+  db.ref("fiches/" + currentUser).once("value").then(snap => {  
+    let box = document.getElementById("ficheList");  
+    box.innerHTML = "";  
+  
+    snap.forEach(f => {  
+      let d = f.val();  
+  
+      if(d.matiere.toLowerCase().includes(text) || d.classe.toLowerCase().includes(text)){  
+        renderFiche(f.key, d);  
+      }  
+    });  
+  });  
+}  
+function filterMatiere(m){  
+  db.ref("fiches/" + currentUser).once("value").then(snap => {  
+    let box = document.getElementById("ficheList");  
+    box.innerHTML = "";  
+  
+    snap.forEach(f => {  
+      let d = f.val();  
+  
+      if(m === "" || d.matiere === m){  
+        renderFiche(f.key, d);  
+      }  
+    });  
+  });  
+}  
+    
+  function printFiche(id){  
+  db.ref("fiches/" + currentUser + "/" + id).once("value").then(snap => {  
+    let d = snap.val();  
+  
+    let w = window.open("");  
+  
+    w.document.write(`  
+      <h2>Fiche de préparation</h2>  
+      <p><b>Enseignant:</b> ${d.teacher}</p>  
+      <p><b>Matière:</b> ${d.matiere}</p>  
+      <p><b>Classe:</b> ${d.classe}</p>  
+      <p><b>Date:</b> ${d.date}</p>  
+      <hr>  
+      <p>${d.developpement}</p>  
+    `);  
+  
+    w.print();  
+  });  
+}  
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+      
+      
+    
+      
+    
+    
+</script>  
+  
+</body>  
 </html>
