@@ -2,110 +2,148 @@
 <html lang="fr">  
 <head>  
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>  
-<meta charset="UTF-8">  
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Système Eleves / Enseignants</title>  
   
 <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-app-compat.js"></script>  
 <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-auth-compat.js"></script>  
 <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-database-compat.js"></script>  
   
-<style>  
-body{  
-  margin:0;  
-  font-family: Arial, sans-serif;  
-  background:#0b141a;  
-  color:white;  
-}  
-.me{  
-  background:#25D366;  
-  color:black;  
-  margin-left:auto;  
-  text-align:right;  
-}  
+<style>
   
-.other{  
-  background:#1f2c34;  
-  margin-right:auto;  
-}  
-  
-/* PAGES */  
-.page{  
-  display:none;  
-  min-height:100vh;  
-  padding:20px;  
-  flex-direction:column;  
-  justify-content:center;  
-  align-items:center;  
-  text-align:center;  
-}  
-  
-.active{  
-  display:flex;  
-}  
-  
-/* HEADER STYLE */  
-h2{  
-  color:#25D366;  
-}  
-  
-/* INPUT STYLE WHATSAPP */  
-input, select{  
-  width:80%;  
-  padding:12px;  
-  margin:8px 0;  
-  border-radius:10px;  
-  border:none;  
-  outline:none;  
-}  
-  
-/* BOUTONS */  
-button{  
-  width:50%;  
-  padding:12px;  
-  margin:8px 0;  
-  border:none;  
-  border-radius:10px;  
-  background:#25D366;  
-  color:black;  
-  font-weight:bold;  
-  align-justify : center  
-}  
-  
-/* DASHBOARD BOXES */  
-#eleveBox, #teacherBox{  
-  background:#111b21;  
-  padding:15px;  
-  border-radius:15px;  
-  margin-top:10px;  
-}  
-  
-/* CHAT STYLE (future) */  
-.chatBox{  
-  height:60vh;  
-  overflow-y:auto;  
-  background:#0f1a20;  
-  padding:10px;  
-  border-radius:15px;  
-}  
-  
-/* BULLES MESSAGES (préparé pour chat) */  
-.msg{  
-  padding:10px;  
-  margin:5px;  
-  border-radius:10px;  
-  max-width:70%;  
-}  
-  
-.me{  
-  background:#25D366;  
-  color:black;  
-  margin-left:auto;  
-}  
-  
-.other{  
-  background:#1f2c34;  
-}  
-</style>  
+.container{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+}
+
+/* ===== BASE ===== */
+*{
+  box-sizing: border-box;
+}
+
+body{
+  margin:0;
+  font-family: Arial, sans-serif;
+  background:#0b141a;
+  color:white;
+}
+
+/* ===== PAGES ===== */
+.page {
+  display: none; /* 🔥 cacher toutes les pages par défaut */
+  min-height: 100vh;
+  padding: 20px;
+
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.page > div {
+  width: 100%;
+  max-width: 500px;
+  margin: auto; /* 🔥 centre le bloc */
+}
+
+.page.active{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+
+/* ===== TITRES ===== */
+h2{
+  color:#25D366;
+  margin-bottom:20px;
+}
+
+/* ===== INPUTS ===== */
+input, select, textarea{
+  width:100%;
+  padding:12px;
+  margin:8px 0;
+  border-radius:10px;
+  border:none;
+  outline:none;
+  font-size:16px; /* important pour Android */
+}
+
+/* ===== BOUTONS ===== */
+button{
+  width:50%;
+  padding:12px;
+  margin:8px auto;
+  border:none;
+  border-radius:10px;
+  background:#25D366;
+  color:black;
+  font-weight:bold;
+  cursor:pointer;
+  display:block;
+}
+
+/* ===== BOXES ===== */
+#eleveBox, #teacherBox{
+  background:#111b21;
+  padding:15px;
+  border-radius:15px;
+  margin-top:10px;
+  justify-content:center;
+}
+
+/* ===== CHAT ===== */
+.chatBox{
+  height:60vh;
+  overflow-y:auto;
+  background:#0f1a20;
+  padding:10px;
+  border-radius:15px;
+  justify-content:center;
+}
+
+/* ===== MESSAGES ===== */
+.msg{
+  padding:10px;
+  margin:5px;
+  border-radius:10px;
+  max-width:75%;
+  word-wrap:break-word;
+}
+
+.me{
+  background:#25D366;
+  color:black;
+  margin-left:auto;
+  text-align:right;
+}
+
+.other{
+  background:#1f2c34;
+  margin-right:auto;
+}
+
+/* ===== RESPONSIVE MOBILE ===== */
+@media (max-width:600px){
+  .page{
+    padding:10px;
+  }
+
+  h2{
+    font-size:20px;
+  }
+}
+
+/* ===== RESPONSIVE PC ===== */
+@media (min-width:900px){
+  .page > div{
+    max-width:600px;
+  }
+}
+
+</style>
 </head>  
   
 <body>  
@@ -125,20 +163,23 @@ button{
 </div>  
   
 <!-- LOGIN -->  
-<div id="login" class="page">  
-<h2>Connexion</h2>  
-  
-<input id="logEmail" placeholder="Email">  
-<input id="logPass" type="password" placeholder="Mot de passe">  
-  
-<button onclick="login()">Se connecter</button>  
-<button onclick="go('home')">Retour</button>  
-  
-<p id="loginError" style="color:red;"></p>  
-</div>  
+<div id="login" class="page">
+  <div class="container">
+    <h2>Connexion</h2>
+
+    <input id="logEmail" placeholder="Email">
+    <input id="logPass" type="password" placeholder="Mot de passe">
+
+    <button onclick="login()">Se connecter</button>
+    <button onclick="go('home')">Retour</button>
+
+    <p id="loginError" style="color:red;"></p>
+  </div>
+</div>
   
 <!-- REGISTER -->  
-<div id="register" class="page">  
+<div id="register" class="page"> 
+  
 <h2>Inscription</h2>  
   
 <input id="regName" placeholder="Nom">  
@@ -155,16 +196,18 @@ button{
 </div>  
   
 <!-- DASHBOARD -->  
-<div id="dashboard" class="page">  
+<div id="dashboard" class="page"> 
+  
 <h2 id="welcome"></h2>  
 <p id="roleText"></p>  
   
-<div id="eleveBox" style="display:none;">  
+<div id="eleveBox" style="display:none;"> 
+ 
 <h3>Élève</h3>  
 <button onclick="openPage('notes')">Notes</button>  
 <button onclick="openPage('cours')">Cours</button>  
-<button onclick="openPage('chat')">Chat</button>  
-</div>  
+<button onclick="openPage('chat')">Chat</button>
+</div> 
   
 <div id="teacherBox" style="display:none;">  
 <h3>Enseignant</h3>  
@@ -212,15 +255,17 @@ cursor:pointer;
 </div>  
   
 <!-- MENU -->  
-<div id="menuPlus" style="  
-position:fixed;  
-bottom:90px;  
-right:20px;  
-background:#111b21;  
-padding:10px;  
-border-radius:10px;  
-display:none;  
-">  
+<div id="menuPlus" style="
+position:fixed;
+bottom:90px;
+left:70%;
+transform:translateX(-50%);
+background:#111b21;
+padding:10px;
+border-radius:10px;
+display:none;
+text-align:center;
+">
   
 <button onclick="newDiscussion()">💬 Nouvelle discussion</button>  
 <button onclick="openGroups()">👨‍👩‍👧 Groupe</button>  
