@@ -9,6 +9,9 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-auth-compat.js"></script>  
 <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-database-compat.js"></script>  
   
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script> 
+ <script src="https://unpkg.com/html5-qrcode"></script>
+  
 <style>
   
 .container{
@@ -28,6 +31,109 @@ body{
   font-family: Arial, sans-serif;
   background:#0b141a;
   color:white;
+}
+button.fab{
+  all: unset;
+}
+
+.msg{
+  padding:12px;
+  margin:8px;
+  border-radius:18px;
+  max-width:80%;
+  word-wrap:break-word;
+  box-shadow:0 2px 10px rgba(0,0,0,0.3);
+  animation:fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn{
+  from{
+    opacity:0;
+    transform:translateY(10px);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+.chatBox{
+  padding-bottom:80px;
+  height:70vh;
+  overflow-y:auto;
+  padding:15px;
+  background:
+  linear-gradient(
+  rgba(11,20,26,.95),
+  rgba(11,20,26,.95)
+  ),
+  url('https://i.imgur.com/7v1ZK8b.png');
+  background-size:cover;
+}
+
+.msg{
+  padding:12px;
+  border-radius:18px;
+  margin:8px 0;
+  max-width:80%;
+  position:relative;
+  animation:fade .2s ease;
+  font-size:15px;
+}
+
+#discussion{
+  padding:0;
+  background:#0b141a;
+}
+
+#chatWith{
+  background:#202c33;
+  width:100%;
+  padding:15px;
+  margin:0;
+  text-align:left;
+  position:sticky;
+  top:0;
+}
+#chat{
+  position:relative;
+  overflow:hidden;
+}
+#contactsBox{
+  width:100%;
+  padding-bottom:120px;
+}
+
+.chatBox{
+  flex:1;
+  width:100%;
+  overflow-y:auto;
+}
+
+
+.me{
+  background:#25D366;
+  color:#000;
+  margin-left:auto;
+  border-bottom-right-radius:5px;
+}
+
+.other{
+  background:#202c33;
+  color:white;
+  margin-right:auto;
+  border-bottom-left-radius:5px;
+}
+
+@keyframes fade{
+  from{
+    opacity:0;
+    transform:translateY(10px);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
 }
 
 /* ===== PAGES ===== */
@@ -59,7 +165,127 @@ h2{
   color:#25D366;
   margin-bottom:20px;
 }
+/* ===== FAB BUTTON ===== */
+/* ===== FAB BUTTON STABLE ===== */
+.fab{
+  position:fixed;
+  bottom:20px;
+  right:20px;
 
+  width:56px !important;
+  height:56px !important;
+  max-width:56px !important;
+  max-height:56px !important;
+
+  min-width:56px !important;
+  min-height:56px !important;
+
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  border-radius:50% !important;
+
+  background:#25D366 !important;
+  color:#000 !important;
+
+  font-size:30px !important;
+  font-weight:bold !important;
+
+  line-height:1 !important;
+
+  padding:0 !important;
+  margin:0 !important;
+
+  border:none !important;
+
+  box-sizing:border-box !important;
+
+  flex:0 0 56px !important;
+
+  overflow:hidden !important;
+
+  cursor:pointer;
+
+  z-index:9999;
+
+  box-shadow:0 10px 20px rgba(0,0,0,0.25);
+
+  transition:transform 0.25s ease;
+}
+/* rotation propre */
+.fab.active{
+  transform:rotate(135deg);
+}
+
+/* ===== MENU WHATSAPP STYLE ===== */
+.fab-menu{
+  position:fixed;
+
+  bottom:85px;
+  right:20px;
+
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+
+  gap:12px;
+
+  z-index:9998;
+
+  opacity:0;
+  visibility:hidden;
+  transform:translateY(15px);
+
+  transition:0.25s ease;
+}
+
+/* affichage */
+.fab-menu.show{
+  opacity:1;
+  visibility:visible;
+  transform:translateY(0);
+}
+
+/* boutons menu */
+.fab-menu button{
+
+  width:auto;
+  min-width:200px;
+
+  padding:12px 16px;
+
+  border:none;
+  border-radius:16px;
+
+  background:#202c33;
+  color:white;
+
+  font-size:15px;
+  font-weight:bold;
+
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+
+  box-shadow:0 5px 15px rgba(0,0,0,0.35);
+
+  cursor:pointer;
+
+  transition:0.2s;
+}
+
+/* hover */
+.fab-menu button:hover{
+  transform:scale(1.03);
+  background:#2a3942;
+}
+
+/* light mode */
+body.light .fab-menu button{
+  background:white;
+  color:black;
+}
 /* ===== INPUTS ===== */
 input, select, textarea{
   width:100%;
@@ -93,6 +319,154 @@ button{
   margin-top:10px;
   justify-content:center;
 }
+/* ===== ROOT THEMES ===== */
+:root{
+  --bg:#0b141a;
+  --card:#111b21;
+  --text:#ffffff;
+  --sub:#aaa;
+  --primary:#25D366;
+}
+
+/* 🌞 LIGHT MODE */
+body.light{
+  --bg:#f5f6f6;
+  --card:#ffffff;
+  --text:#111;
+  --sub:#555;
+}
+
+/* APPLY GLOBAL */
+body{
+  background:var(--bg);
+  color:var(--text);
+  transition:0.3s;
+}
+
+/* ===== HOME ===== */
+.home-container{
+  position:relative;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:20px;
+}
+
+/* LOGO */
+.logo{
+  width:95px;
+  height:95px;
+  border-radius:50%;
+  background:linear-gradient(135deg,var(--primary),#128C7E);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:40px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.3);
+  animation:pop 0.8s ease;
+}
+
+@keyframes pop{
+  from{transform:scale(0);opacity:0;}
+  to{transform:scale(1);opacity:1;}
+}
+
+/* TITLE */
+.title{
+  color:var(--primary);
+  font-size:28px;
+  margin-top:10px;
+}
+
+/* SUB */
+.subtitle{
+  color:var(--sub);
+  font-size:14px;
+  margin-bottom:20px;
+}
+
+/* CARD */
+.card{
+  background:var(--card);
+  padding:18px;
+  border-radius:15px;
+  width:90%;
+  max-width:380px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.2);
+  color:var(--sub);
+  font-size:14px;
+  line-height:1.8;
+}
+
+/* BUTTON */
+.btn{
+  width:90%;
+  max-width:380px;
+  margin-top:20px;
+  padding:14px;
+  border:none;
+  border-radius:12px;
+  background:var(--primary);
+  color:black;
+  font-weight:bold;
+  font-size:16px;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+.btn:hover{
+  transform:scale(1.03);
+}
+
+/* BOTTOM TEXT */
+.bottom-text{
+  margin-top:15px;
+  color:var(--sub);
+  font-size:13px;
+}
+
+.bottom-text span{
+  color:var(--primary);
+  cursor:pointer;
+  font-weight:bold;
+}
+/* CHAT INPUT toujours au-dessus du reste */
+#discussion {
+  position: relative;
+}
+
+/* FAB = plus bas que le chat input */
+.fab {
+  z-index: 1000;
+}
+
+/* MENU FAB */
+.fab-menu {
+  z-index: 1000;
+}
+
+/* INPUT CHAT = PRIORITÉ MAX */
+#discussion div[style*="position:fixed"] {
+  z-index: 9999;
+}
+
+
+/* THEME BUTTON */
+.theme-switch{
+  position:absolute;
+  top:15px;
+  right:15px;
+  background:var(--card);
+  padding:8px 12px;
+  border-radius:20px;
+  font-size:14px;
+  cursor:pointer;
+  box-shadow:0 5px 15px rgba(0,0,0,0.2);
+}
+
 
 /* ===== CHAT ===== */
 .chatBox{
@@ -142,6 +516,78 @@ button{
     max-width:600px;
   }
 }
+.card-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:15px;
+  margin-top:15px;
+}
+
+.dash-card{
+  background:#111b21;
+  padding:20px;
+  border-radius:15px;
+  text-align:center;
+  cursor:pointer;
+  transition:0.2s;
+  box-shadow:0 5px 15px rgba(0,0,0,0.2);
+}
+
+.dash-card:hover{
+  transform:scale(1.05);
+  background:#1b2a33;
+}
+
+.dash-card b{
+  display:block;
+  margin-top:8px;
+  font-size:16px;
+}
+
+.dash-card p{
+  color:#25D366;
+  font-weight:bold;
+  margin-top:5px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 </style>
 </head>  
@@ -149,18 +595,46 @@ button{
 <body>  
   
 <!-- HOME -->  
-<div id="home" class="page active">  
-<h2>Bienvenue</h2>  
-  <br> <br><br> <br><br> <br>  
-<button onclick="go('login')">Ouvrir</button>  
-  <br> <br><br> <br><br> <br>  
-  <p style="color:#aaa;">  
-  Pas de compte ?  
-  <span onclick="go('register')" style="color:#25D366; cursor:pointer;">  
-    S'inscrire  
-  </span>  
-</p>  
-</div>  
+<div id="home" class="page active">
+
+  <div class="home-container">
+
+    <!-- MODE TOGGLE -->
+    <div class="theme-switch" onclick="toggleTheme()">
+      🌙 / ☀️
+    </div>
+
+    <!-- LOGO -->
+    <div class="logo">🎓</div>
+
+    <!-- TITRE -->
+    <h1 class="title">Multi-École</h1>
+
+    <p class="subtitle">
+      Plateforme intelligente pour élèves & enseignants
+    </p>
+
+    <!-- CARTE -->
+    <div class="card">
+      📚 Cours organisés<br>
+      📝 Notes en temps réel<br>
+      💬 Chat instantané<br>
+      📄 Fiches de préparation PDF
+    </div>
+
+    <!-- BOUTON -->
+    <button class="btn" onclick="go('login')">
+      🚀 Commencer
+    </button>
+
+    <p class="bottom-text">
+      Pas de compte ?
+      <span onclick="go('register')">Créer un compte</span>
+    </p>
+
+  </div>
+
+</div>
   
 <!-- LOGIN -->  
 <div id="login" class="page">
@@ -222,7 +696,19 @@ button{
   
 <!-- PAGES VIDES -->  
 <div id="notes" class="page"><h2>Notes</h2><button onclick="back()">Retour</button></div>  
-<div id="cours" class="page"><h2>Cours</h2><button onclick="back()">Retour</button></div>  
+<div id="cours" class="page"><h2>Cours</h2><button onclick="back()">Retour</button></div>
+  
+<!-- AJOUT NOTES -->
+<div id="addNotes" class="page">
+  <h2>Ajouter notes</h2>
+  <button onclick="back()">Retour</button>
+</div>
+
+<!-- AJOUT COURS -->
+<div id="addCours" class="page">
+  <h2>Ajouter cours</h2>
+  <button onclick="back()">Retour</button>
+</div>
   
   <!-- ====== CHAT ======= -->   
 <div id="chat" class="page">  
@@ -231,64 +717,194 @@ button{
   
 <p id="chatTitle">Discuter en temps réel</p>  
   
-<!-- LISTE DISCUSSIONS -->  
-<div id="chatList"></div>  
+<!-- LISTE DISCUSSIONS --> 
+<div id="chatList"></div>
+
+
+<!-- LISTE CONTACTS -->
+<div id="contactsBox"></div>  
   
-<!-- 🔥 BOUTON + -->  
-<div onclick="toggleMenu()"   
-style="  
-position:fixed;  
-bottom:20px;  
-right:20px;  
-width:55px;  
-height:55px;  
-border-radius:50%;  
-background:#25D366;  
-color:black;  
-font-size:30px;  
-display:flex;  
-align-items:center;  
-justify-content:center;  
-cursor:pointer;  
-">  
-+  
-</div>  
-  
-<!-- MENU -->  
-<div id="menuPlus" style="
-position:fixed;
-bottom:90px;
-left:70%;
-transform:translateX(-50%);
-background:#111b21;
-padding:10px;
-border-radius:10px;
-display:none;
-text-align:center;
-">
-  
-<button onclick="newDiscussion()">💬 Nouvelle discussion</button>  
-<button onclick="openGroups()">👨‍👩‍👧 Groupe</button>  
-<button onclick="openSettings()">⚙️ Paramètres</button>  
-  
-</div>  
+<!-- FAB BUTTON -->
+<div class="fab" id="fabBtn" onclick="toggleFabMenu()">
+  +
+</div>
+
+<!-- MENU -->
+<div id="fabMenu" class="fab-menu">
+
+  <button onclick="newDiscussion()">💬 Nouvelle discussion</button>
+  <button onclick="openGroups()">👨‍👩‍👧 Groupe</button>
+  <button onclick="openSettings()">⚙️ Paramètres</button>
+  <button onclick="openStatus()">🟢 Statuts</button>
+  <button onclick="addStatus()">➕ Ajouter statut</button>
+  <button onclick="go('createSchool')">🏫 Créer École</button>
+  <button onclick="go('mySchools'); loadMySchools()">
+🏫 Mes Écoles
+</button>
+<button onclick="openPage('settingsPage')">
+📷 Scanner QR école
+</button>
+
+
+
+</div>
+ 
   
 <button onclick="back()">Retour</button>  
 </div>  
     
     
   <!-- ======= DISCUTION ===== -->  
-<div id="discussion" class="page">  
-  
-<h2 id="chatWith"></h2>  
-  
-<div class="chatBox" id="chatBox"></div>  
-  
-<input id="msgInput" placeholder="Message...">  
-<button onclick="sendMessage()">Envoyer</button>  
-  
-<button onclick="go('chat')">Retour</button>  
-</div>  
+<!-- ======= DISCUTION ===== -->
+<div id="discussion" class="page">
+
+<!-- HEADER -->
+<div style="
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:60px;
+background:#202c33;
+display:flex;
+align-items:center;
+gap:10px;
+padding:0 10px;
+z-index:9999;
+border-bottom:1px solid #333;
+">
+
+<button onclick="go('chat')"
+style="
+width:40px;
+height:40px;
+border:none;
+border-radius:50%;
+background:#111b21;
+color:white;
+font-size:20px;
+display:flex;
+align-items:center;
+justify-content:center;
+margin:0;
+padding:0;
+flex:none;
+">
+←
+</button>
+
+<h2 id="chatWith"
+style="
+margin:0;
+font-size:18px;
+color:white;
+">
+</h2>
+
+</div>
+
+<!-- CHAT -->
+<div class="chatBox" id="chatBox"
+style="
+margin-top:60px;
+padding-bottom:150px;
+height:100vh;
+overflow-y:auto;
+width:100%;
+">
+</div>
+
+<!-- TYPING -->
+<p id="typingStatus"
+style="
+color:#25D366;
+font-size:13px;
+margin:0 10px 120px 10px;
+height:20px;
+">
+</p>
+
+<!-- BAS -->
+<div style="
+position:fixed;
+bottom:0;
+left:0;
+width:100%;
+background:#0b141a;
+padding:10px;
+display:flex;
+align-items:flex-end;
+gap:10px;
+z-index:9999;
+border-top:1px solid #222;
+">
+
+<!-- INPUT + CAMERA -->
+<div style="
+flex:1;
+display:flex;
+flex-direction:column;
+gap:6px;
+">
+
+<input id="msgInput"
+placeholder="Message..."
+oninput="typing()"
+style="
+width:100%;
+padding:12px;
+border:none;
+border-radius:20px;
+outline:none;
+background:#202c33;
+color:white;
+margin:0;
+">
+
+<button onclick="document.getElementById('fileInput').click()"
+style="
+width:42px;
+height:42px;
+border:none;
+border-radius:50%;
+background:#202c33;
+color:white;
+font-size:18px;
+display:flex;
+align-items:center;
+justify-content:center;
+margin:0;
+padding:0;
+">
+📷
+</button>
+
+</div>
+
+<!-- ENVOYER -->
+<button onclick="sendMessage()"
+style="
+width:50px;
+height:50px;
+border:none;
+border-radius:50%;
+background:#25D366;
+color:black;
+font-size:20px;
+font-weight:bold;
+display:flex;
+align-items:center;
+justify-content:center;
+margin:0;
+padding:0;
+flex:none;
+">
+➤
+</button>
+
+</div>
+
+</div>
   <!-- ====== NOUVELLE DISCUTION ===== -->   
   <div id="newChat" class="page">  
   
@@ -305,10 +921,37 @@ text-align:center;
 <button onclick="go('chat')">Retour</button>  
 </div>  
   
-<div id="settingsPage" class="page">  
-<h2>Paramètres (à venir)</h2>  
-<button onclick="go('chat')">Retour</button>  
-</div>  
+<div id="settingsPage" class="page">
+
+  <h2>⚙️ Paramètres</h2>
+
+  <!-- PROFIL -->
+  <div style="background:#111b21;padding:15px;border-radius:12px;margin-bottom:10px;">
+
+    <h3>👤 Modifier profil</h3>
+
+    <input id="profileName" placeholder="Nom">
+    <textarea id="profileStatus" placeholder="Statut"></textarea>
+
+    <button onclick="saveProfile()">💾 Enregistrer</button>
+
+  </div>
+
+  <!-- SCANNER QR -->
+  <div style="background:#111b21;padding:15px;border-radius:12px;">
+
+    <h3>📷 Scanner QR école</h3>
+
+    <div id="qr-reader" style="width:100%;"></div>
+
+    <button onclick="startQRScanner()">▶️ Ouvrir caméra</button>
+    <button onclick="stopQRScanner()">❌ Stop</button>
+
+  </div>
+
+  <button onclick="back()">⬅ Retour</button>
+
+</div>
   
   <!-- ==== FICHE DE PREPARATION ==== -->   
   <div id="fiche" class="page">  
@@ -350,7 +993,201 @@ text-align:center;
 <button onclick="back()">Retour</button>  
   
 </div>  
+<div id="userProfilePage" class="page">
+
+<img id="userProfilePhoto"
+width="140"
+height="140"
+style="
+border-radius:50%;
+object-fit:cover;
+border:4px solid #25D366;
+margin-top:20px;
+">
+
+<h2 id="userProfileName"></h2>
+
+<p id="userProfileStatus"></p>
+
+<button onclick="go('chat')">
+Retour
+</button>
+
+</div>
+<!-- ===== DASHBOARD ECOLE ===== -->
+<div id="schoolDashboard" class="page">
+
+  <h2>🏫 Dashboard École</h2>
+
+  <!-- Infos école -->
+  <div id="schoolInfoBox" style="
+    background:#111b21;
+    padding:15px;
+    border-radius:15px;
+    margin-bottom:15px;
+  ">
+    <b id="schoolNameTitle">Nom école</b><br>
+    <small id="schoolDescTitle">Description</small>
+  </div>
+
+  <!-- CARTES -->
+  <div class="card-grid">
+
+    <!-- ÉLÈVES -->
+    <div class="dash-card" onclick="openPage('studentsPage')">
+      🎓<br>
+      <b>Élèves</b>
+      <p id="countStudents">0</p>
+    </div>
+
+    <!-- ENSEIGNANTS -->
+    <div class="dash-card" onclick="openPage('teachersPage')">
+      👨‍🏫<br>
+      <b>Enseignants</b>
+      <p id="countTeachers">0</p>
+    </div>
+
+    <!-- NOTES -->
+    <div class="dash-card" onclick="openPage('notesPage')">
+      📝<br>
+      <b>Notes</b>
+      <p id="countNotes">0</p>
+    </div>
+
+    <!-- COURS -->
+    <div class="dash-card" onclick="openPage('coursesPage')">
+      📚<br>
+      <b>Cours</b>
+      <p id="countCourses">0</p>
+    </div>
+
+    <!-- CHAT -->
+    <div class="dash-card" onclick="openPage('chat')">
+      💬<br>
+      <b>Chat École</b>
+      <p>Ouvrir</p>
+    </div>
+
+    <!-- PARAMÈTRES -->
+    <div class="dash-card" onclick="openPage('schoolSettings')">
+      ⚙️<br>
+      <b>Paramètres</b>
+      <p>Admin</p>
+    </div>
+
+  </div>
+
+  <button onclick="back()">⬅ Retour</button>
+
+</div>
+
+<input 
+type="file" 
+id="fileInput"
+accept="image/*"
+style="display:none;">
+
+<div id="statusPage" class="page">
+
+<h2>Statuts</h2>
+
+<div id="statusList"></div>
+
+<button onclick="back()">
+Retour
+</button>
+
+</div>
     
+ <!-- ===== CRÉER ÉCOLE ===== -->
+<div id="createSchool" class="page">
+
+  <h2>🏫 Créer une École</h2>
+
+  <!-- Nom de l'école -->
+  <input id="schoolName" placeholder="Nom de l'école">
+
+  <!-- Description -->
+  <textarea id="schoolDesc" placeholder="Description de l'école"></textarea>
+
+  <!-- Bouton création -->
+  <button onclick="createSchool()">Créer l'école</button>
+
+  <!-- retour -->
+  <button onclick="back()">Retour</button>
+
+</div>
+<!-- ===== MES ECOLES ===== -->
+<div id="mySchools" class="page">
+
+  <h2>🏫 Mes Écoles</h2>
+
+  <div id="schoolsList"></div>
+
+  <button onclick="go('dashboard')">Retour</button>
+
+</div>
+<!-- ===== ÉLÈVES ===== -->
+<div id="studentsPage" class="page">
+
+  <h2>🎓 Gestion des élèves</h2>
+
+  <!-- AJOUT -->
+  <div style="background:#111b21;padding:15px;border-radius:12px;margin-bottom:10px;">
+
+    <input id="stuName" placeholder="Nom élève">
+    <input id="stuClasse" placeholder="Classe">
+
+    <button onclick="addStudent()">➕ Ajouter élève</button>
+
+  </div>
+
+  <!-- RECHERCHE -->
+  <input id="searchStudent" placeholder="Rechercher..." oninput="renderStudents()">
+
+  <!-- TABLEAU -->
+  <div id="studentsTable"></div>
+
+  <button onclick="back()">⬅ Retour</button>
+
+</div>
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
     
     
     
@@ -380,7 +1217,152 @@ const auth = firebase.auth();
 const db = firebase.database();  
 let currentUser = null;  
 let usersList = [];  
-let currentChat = null;  
+let currentChat = null; 
+let editFicheId = null;
+let currentSchool = null;
+let navMode = "app"; // "app" ou "school"
+let qrScanner = null;
+
+
+
+function openSchool(schoolId){
+  if(!schoolId){
+    alert("École introuvable");
+    return;
+  }
+
+  currentSchool = schoolId;
+  navMode = "school";
+
+  go("schoolDashboard");
+  loadSchoolDashboard(schoolId);
+}
+function startQRScanner(){
+
+  const reader = document.getElementById("qr-reader");
+
+  if(!reader){
+    alert("qr-reader introuvable");
+    return;
+  }
+
+  reader.innerHTML = "";
+
+  qrScanner = new Html5Qrcode("qr-reader");
+
+  Html5Qrcode.getCameras()
+  .then(devices => {
+
+    if(devices.length === 0){
+      alert("Aucune caméra trouvée");
+      return;
+    }
+
+    qrScanner.start(
+      devices[0].id,
+      {
+        fps: 10,
+        qrbox: 250
+      },
+
+      function(decodedText){
+
+        handleQRScan(decodedText);
+
+      },
+
+      function(error){
+        // ignore erreurs scan
+      }
+
+    );
+
+  })
+  .catch(err => {
+
+    console.log(err);
+    alert("Permission caméra refusée");
+
+  });
+
+}
+function stopQRScanner(){
+
+  if(qrScanner){
+    qrScanner.stop().then(() => {
+      qrScanner.clear();
+    });
+  }
+
+}
+function handleQRScan(data){
+
+  try{
+
+    let qr = JSON.parse(data);
+
+    // ❌ EXPIRATION 3 MIN
+    if(Date.now() > qr.expireAt){
+      alert("❌ QR expiré");
+      return;
+    }
+
+    // 🔥 créer demande d'adhésion admin
+    db.ref("schools/" + qr.schoolId + "/joinRequests").push({
+
+      studentId: qr.studentId,
+      linkCode: qr.linkCode,
+      time: Date.now(),
+      status: "pending"
+
+    });
+
+    alert("📩 Demande envoyée à l'administrateur");
+
+    stopQRScanner();
+
+  }catch(e){
+    alert("QR invalide");
+  }
+
+}
+function listenJoinRequests(){
+
+  db.ref("schools/" + currentSchool + "/joinRequests")
+  .on("value", snap => {
+
+    snap.forEach(req => {
+
+      let r = req.val();
+
+      if(r.status === "pending"){
+
+        if(confirm(
+          "👤 Un élève veut rejoindre l'école\n\n" +
+          "Valider ?"
+        )){
+
+          db.ref("schools/" + currentSchool + "/students/" + r.studentId)
+          .update({
+            approved: true
+          });
+
+          req.ref.update({status:"approved"});
+
+        } else {
+
+          req.ref.update({status:"rejected"});
+
+        }
+
+      }
+
+    });
+
+  });
+
+}
+
   
 // ================= NAVIGATION =================  
 function go(page){  
@@ -388,9 +1370,18 @@ function go(page){
   document.getElementById(page).classList.add("active");  
 }  
   
-function back(){  
-  go("dashboard");  
-}  
+function back(){
+
+  // 🔥 si on est dans une école
+  if(navMode === "school"){
+    go("schoolDashboard");
+    loadSchoolDashboard(currentSchool);
+    return;
+  }
+
+  // 🔥 sinon retour app normale
+  go("dashboard");
+}
   
 // ================= INSCRIPTION =================  
 function register(){  
@@ -400,10 +1391,12 @@ function register(){
   let role = document.getElementById("regRole").value;  
   
   let photo = "https://i.imgur.com/1X7Qq7C.png"; // default avatar  
+  let status = "Salut 👋 j'utilise Multi-École";
   
   auth.createUserWithEmailAndPassword(email, pass)  
   .then(user => {  
     db.ref("users/" + user.user.uid).set({  
+      status,
       name,  
       email,  
       role,  
@@ -483,19 +1476,7 @@ function logout(){
   auth.signOut();  
   go("home");  
 }  
-function openPage(page){  
-  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));  
-  document.getElementById(page).classList.add("active");  
-  
-  if(page === "chat"){  
-    loadContacts();  
-  }  
-  
-  // 🔥 AJOUT IMPORTANT  
-  if(page === "fiche"){  
-    loadFiches();  
-  }  
-}  
+
 function showUsers(){  
   let box = document.getElementById("usersBox");  
   box.innerHTML = "";  
@@ -518,7 +1499,7 @@ function showUsers(){
 function openChat(uid){  
   
   currentChat = uid;  
-  go("chat");  
+  go("discussion"); 
   
   let chatId = getChatId(currentUser, uid);  
   
@@ -534,58 +1515,105 @@ function openChat(uid){
   markAsRead(chatId);  
   loadMessages();  
 }  
-function sendMessage(){  
+function sendMessage(){ 
+    db.ref("contacts/" + currentUser + "/" + currentChat).set(true);
+
+  db.ref("contacts/" + currentChat + "/" + currentUser).set(true); 
   let text = document.getElementById("msgInput").value;  
   if(text === "") return;  
   
   let chatId = getChatId(currentUser, currentChat);  
   
   db.ref("chats/" + chatId + "/messages").push({  
+    notification:true,
     sender: currentUser,  
     text,  
     time: Date.now(),  
     status: "sent"  
-  });  
+  });
   
   document.getElementById("msgInput").value = "";  
 }  
   function getChatId(a,b){  
   return a < b ? a+"_"+b : b+"_"+a;  
 }  
-function loadMessages(){  
-  let chatId = getChatId(currentUser, currentChat);  
-  
-  db.ref("chats/" + chatId + "/messages").on("value", snap => {  
-    let box = document.getElementById("chatBox");  
-    box.innerHTML = "";  
-  
-    snap.forEach(msgSnap => {  
-      let m = msgSnap.val();  
-  
-      let div = document.createElement("div");  
-  
-      div.className = "msg " + (m.sender === currentUser ? "me" : "other");  
-  
-      let tick = "";  
-  
-if(m.status === "sent") tick = "✓";  
-if(m.status === "delivered") tick = "✓✓";  
-if(m.status === "read") tick = "✓✓💙";  
-        
-      div.innerHTML = `  
-  ${m.text}<br>  
-  <small>${tick}</small>  
-  <br>  
-  <span style="color:red;cursor:pointer;font-size:12px;"  
-  onclick="deleteMsg('${msgSnap.key}','${chatId}')">  
-  Supprimer  
-  </span>  
-`;  
-  
-      box.appendChild(div);  
-    });  
-  });  
-}  
+function loadMessages(){
+
+  let chatId = getChatId(currentUser, currentChat);
+
+  db.ref("chats/" + chatId + "/messages").on("value", snap => {
+
+    let box = document.getElementById("chatBox");
+    box.innerHTML = "";
+
+    snap.forEach(msgSnap => {
+
+      let m = msgSnap.val();
+
+      let div = document.createElement("div");
+      div.className = "msg " + (m.sender === currentUser ? "me" : "other");
+
+      let tick = "";
+      if(m.status === "sent") tick = "✓";
+      if(m.status === "delivered") tick = "✓✓";
+      if(m.status === "read") tick = "✓✓💙";
+
+      div.innerHTML = `
+
+        ${m.text ? `
+          <div style="font-weight:bold;">
+            ${m.text}
+          </div>
+        ` : ""}
+
+        ${m.image ? `
+          <img src="${m.image}" style="
+            max-width:220px;
+            border-radius:15px;
+            margin-top:5px;
+          ">
+        ` : ""}
+
+        <div style="
+          font-size:11px;
+          margin-top:5px;
+          opacity:0.7;
+          display:flex;
+          justify-content:flex-end;
+          gap:6px;
+          align-items:center;
+        ">
+          <span>${formatTime(m.time)}</span>
+          <span>${tick}</span>
+        </div>
+
+        <div style="
+          font-size:22px;
+          margin-top:5px;
+        ">
+          ${m.reaction || ""}
+        </div>
+
+      `;
+
+      // réaction clic long
+      div.oncontextmenu = function(e){
+        e.preventDefault();
+
+        let emoji = prompt("Réaction ❤️ 😂 👍 😮");
+        if(!emoji) return;
+
+        msgSnap.ref.update({
+          reaction: emoji
+        });
+      };
+
+      box.appendChild(div);
+
+    });
+
+  });
+}
     
 function markAsRead(chatId){  
   db.ref("chats/" + chatId + "/messages")  
@@ -614,77 +1642,140 @@ function markAsRead(chatId){
 }  
     
     
-function loadContacts(){  
-  let box = document.getElementById("contactsBox");  
-  box.innerHTML = "<h3>Mes contacts</h3>";  
-  
-  db.ref("contacts/" + currentUser).once("value").then(snap => {  
-  
-    if(!snap.exists()){  
-      box.innerHTML += "<p>Aucun contact</p>";  
-      return;  
-    }  
-  
-    snap.forEach(c => {  
-      let uid = c.key;  
-  
-      db.ref("users/" + uid).once("value").then(uSnap => {  
-        let u = uSnap.val();  
-  
-        let div = document.createElement("div");  
-  
-        div.style.display = "flex";  
-        div.style.alignItems = "center";  
-        div.style.margin = "10px";  
-        div.style.padding = "10px";  
-        div.style.background = "#111b21";  
-        div.style.borderRadius = "10px";  
-  
-        div.innerHTML = `  
-          <img src="${u.photo}" width="40" height="40"  
-          style="border-radius:50%;margin-right:10px;">  
-            
-          <div style="flex:1;">  
-            <b>${u.name}</b><br>  
-            <small>${u.email}</small>  
-          </div>  
-        `;  
-  
-        // 👉 CLIQUER ouvre chat  
-        div.onclick = () => openChat(uid);  
-  
-        box.appendChild(div);  
-      });  
-    });  
-  });  
-}  
-function toggleMenu(){  
-  let m = document.getElementById("menuPlus");  
-  m.style.display = (m.style.display === "block") ? "none" : "block";  
-}  
-function openContacts(){  
-  document.getElementById("menuPlus").style.display = "none";  
-  
-  let email = prompt("Entrer email du contact");  
-  
-  if(!email) return;  
-  
-  db.ref("users").once("value").then(snap => {  
-    snap.forEach(u => {  
-      let user = u.val();  
-      let uid = u.key;  
-  
-      if(user.email === email){  
-  
-        // 🔥 AJOUT CONTACT  
-        db.ref("contacts/" + currentUser + "/" + uid).set(true);  
-  
-        alert("Contact ajouté !");  
-        loadContacts();  
-      }  
-    });  
-  });  
-}  
+function loadContacts(){
+
+  let box = document.getElementById("contactsBox");
+  box.innerHTML = "";
+
+  db.ref("contacts/" + currentUser).once("value").then(snap => {
+
+    if(!snap.exists()){
+      box.innerHTML = "<p>Aucune discussion</p>";
+      return;
+    }
+
+    let promises = [];
+
+    snap.forEach(c => {
+
+      let uid = c.key;
+
+      let p = db.ref("users/" + uid).once("value").then(uSnap => {
+
+        let u = uSnap.val();
+
+        let chatId = getChatId(currentUser, uid);
+
+        return db.ref("chats/" + chatId + "/messages")
+        .limitToLast(1)
+        .once("value")
+        .then(mSnap => {
+
+          let lastMsg = "";
+          let lastTime = "";
+
+          mSnap.forEach(m => {
+            lastMsg = m.val().text || "";
+            lastTime = new Date(m.val().time || Date.now())
+            .toLocaleTimeString([], {
+              hour:'2-digit',
+              minute:'2-digit'
+            });
+          });
+
+          return {
+            uid,
+            user:u,
+            lastMsg,
+            lastTime
+          };
+
+        });
+
+      });
+
+      promises.push(p);
+
+    });
+
+    Promise.all(promises).then(list => {
+
+      list.reverse(); // 🔥 nouveau message en haut
+
+      list.forEach(data => {
+
+        let div = document.createElement("div");
+
+        div.style.display = "flex";
+        div.style.alignItems = "center";
+        div.style.background = "#111b21";
+        div.style.padding = "12px";
+        div.style.borderBottom = "1px solid #222";
+        div.style.cursor = "pointer";
+
+        div.innerHTML = `
+        
+        <img src="${data.user.photo}"
+        onclick="event.stopPropagation();
+        openUserProfile('${data.uid}')" 
+        width="55" 
+        height="55"
+        style="
+        border-radius:50%;
+        margin-right:10px;
+        object-fit:cover;
+        border:2px solid #25D366;
+        ">
+
+        <div style="flex:1;text-align:left;">
+
+          <div style="
+          display:flex;
+          justify-content:space-between;
+          align-items:center;
+          ">
+
+            <b style="font-size:16px;">
+              ${data.user.name}
+            </b>
+
+            <small style="color:gray;">
+              ${data.lastTime}
+            </small>
+
+          </div>
+
+          <div style="
+          color:#aaa;
+          font-size:13px;
+          margin-top:4px;
+          ">
+            ${data.lastMsg || "Nouvelle discussion"}
+          </div>
+
+        </div>
+        `;
+
+        div.onclick = () => startChat(data.uid, data.user.name);
+
+        box.appendChild(div);
+
+      });
+
+    });
+
+  });
+
+}
+
+function toggleFabMenu(){
+
+  let menu = document.getElementById("fabMenu");
+  let btn = document.getElementById("fabBtn");
+
+  menu.classList.toggle("show");
+  btn.classList.toggle("active");
+}
   
 // filtre recherche  
 function filterContacts(text){  
@@ -742,7 +1833,8 @@ function renderUser(box, u, uid){
 }  
     
 function openGroups(){  
-  document.getElementById("menuPlus").style.display = "none";  
+  document.getElementById("fabMenu").classList.remove("show");
+document.getElementById("fabBtn").classList.remove("active");  
   
   let name = prompt("Nom du groupe");  
   if(!name) return;  
@@ -772,165 +1864,165 @@ function openGroups(){
   });  
 }  
     
-function openSettings(){  
-  document.getElementById("menuPlus").style.display = "none";  
+
+  function newDiscussion(){
+
+  document.getElementById("fabMenu").classList.remove("show");
+  document.getElementById("fabBtn").classList.remove("active");
+
+  go("newChat");
+
+  let box = document.getElementById("usersBox");
+  box.innerHTML = "Chargement...";
+
+  db.ref("users").once("value").then(snap => {
+
+    box.innerHTML = "";
+
+    if(!snap.exists()){
+      box.innerHTML = "Aucun utilisateur";
+      return;
+    }
+
+    snap.forEach(child => {
+
+      let uid = child.key;
+      let user = child.val();
+
+      if(uid === currentUser) return;
+
+      let div = document.createElement("div");
+
+      div.style.background = "#111b21";
+      div.style.margin = "10px";
+      div.style.padding = "10px";
+      div.style.borderRadius = "10px";
+      div.style.cursor = "pointer";
+
+      div.innerHTML = `
+        <b>${user.name}</b><br>
+        <small>${user.email}</small>
+      `;
+
+      div.onclick = () => startChat(uid, user.name);
+
+      box.appendChild(div);
+    });
+
+  });
+
+}    
+    function startChat(uid, name){
+
+  currentChat = uid;
+
+  // 🔥 AJOUT AUTO CONTACT STYLE WHATSAPP
+  db.ref("contacts/" + currentUser + "/" + uid).set(true);
+
+  db.ref("contacts/" + uid + "/" + currentUser).set(true);
+
+  document.getElementById("chatWith").innerText = name;
+
+  go("discussion");
   
-  let newName = prompt("Changer ton nom");  
-  if(!newName) return;  
-  
-  db.ref("users/" + currentUser).update({  
-    name: newName  
-  });  
-  
-  alert("Profil mis à jour !");  
-}  
-function deleteMsg(msgId, chatId){  
-  db.ref("chats/" + chatId + "/messages/" + msgId).remove();  
-}  
-  function newDiscussion(){  
-  document.getElementById("menuPlus").style.display = "none";  
-  go("newChat");  
-  
-  let box = document.getElementById("usersBox");  
-  box.innerHTML = "";  
-  
-  db.ref("users").once("value").then(snap => {  
-    snap.forEach(u => {  
-      let user = u.val();  
-      let uid = u.key;  
-  
-      if(uid !== currentUser){  
-  
-        let div = document.createElement("div");  
-  
-        div.style.background = "#111b21";  
-        div.style.margin = "10px";  
-        div.style.padding = "10px";  
-        div.style.borderRadius = "10px";  
-  
-        div.innerHTML = `  
-          <b>${user.name}</b><br>  
-          <small>${user.email}</small>  
-        `;  
-  
-        div.onclick = () => startChat(uid, user.name);  
-  
-        box.appendChild(div);  
-      }  
-    });  
-  });  
-}  
-    
-  function startChat(uid, name){  
-  currentChat = uid;  
-  
-  document.getElementById("chatWith").innerText = name;  
-  
-  go("discussion");  
-  
-  loadMessages();  
-}  
-  function openGroups(){  
-  go("groupsPage");  
-}  
-  
-function openSettings(){  
-  go("settingsPage");  
-}  
-// ================= FICHE DE PREPARATION =================  
-function saveFiche(){  
-  
-  let id = editFicheId || ("fiche_" + Date.now());  
-  
-  db.ref("users/" + currentUser).once("value").then(userSnap => {  
-  
-    let teacherName = userSnap.val().name;  
-  
-    let data = {  
-      teacher: teacherName,  
-      matiere: matiere.value,  
-      classe: classe.value,  
-      date: date.value,  
-      heure: heure.value,  
-      duree: duree.value,  
-      objectif: objectif.value,  
-      prerequis: prerequis.value,  
-      materiel: materiel.value,  
-      intro: intro.value,  
-      developpement: developpement.value,  
-      conclusion: conclusion.value,  
-      evaluation: evaluation.value,  
-      remarque: remarque.value  
-    };  
-  
-    db.ref("fiches/" + currentUser + "/" + id).set(data);  
-  
-    alert("Fiche enregistrée ✅");  
-  
-    editFicheId = null;  
-    clearForm();  
-    loadFiches();  
-  });  
+  db.ref("typing/" + getChatId(currentUser, currentChat))
+.on("value", snap => {
+
+  document.getElementById("typingStatus")
+  .innerText = snap.val() || "";
+
+});
+
+  loadMessages();
 }
-  // ================= FICHE SYSTEM =================  
   
-let editFicheId = null;  
-  
-// 🔥 ENREGISTRER OU MODIFIER  
-function saveFiche(){  
-  
-  let matiere = document.getElementById("matiere").value;  
-  let classe = document.getElementById("classe").value;  
-  let date = document.getElementById("date").value;  
-  let objectif = document.getElementById("objectif").value;  
-  let contenu = document.getElementById("contenu").value;  
-  let evaluation = document.getElementById("evaluation").value;  
-  
-  if(matiere === "" || classe === ""){  
-    alert("Remplis matière et classe");  
-    return;  
-  }  
-  
-  let id = editFicheId || ("fiche_" + Date.now());  
-  
-  db.ref("fiches/" + currentUser + "/" + id).set({  
-    matiere,  
-    classe,  
-    date,  
-    objectif,  
-    contenu,  
-    evaluation  
-  });  
-  
-  alert(editFicheId ? "Fiche modifiée ✅" : "Fiche enregistrée ✅");  
-  
-  editFicheId = null;  
-  clearForm();  
-  loadFiches();  
-}  
+function openSettings(){
+  document.getElementById("fabMenu").classList.remove("show");
+document.getElementById("fabBtn").classList.remove("active");
+  openProfile();
+}
+// ================= FICHE DE PREPARATION =================  
+function saveFiche(){
+    
+
+  let ficheNumber =
+  document.getElementById("ficheNumber")?.value || generateFicheNumber();
+  let id = editFicheId || ("fiche_" + Date.now());
+
+  let matiere = document.getElementById("matiere").value || "";
+  let classe = document.getElementById("classe").value || "";
+  let date = document.getElementById("date").value || "";
+  let heure = document.getElementById("heure").value || "";
+  let duree = document.getElementById("duree").value || "";
+
+  let objectif = document.getElementById("objectif").value || "";
+  let prerequis = document.getElementById("prerequis").value || "";
+  let materiel = document.getElementById("materiel").value || "";
+
+  let intro = document.getElementById("intro").value || "";
+  let developpement = document.getElementById("developpement").value || "";
+  let conclusion = document.getElementById("conclusion").value || "";
+
+  let evaluation = document.getElementById("evaluation").value || "";
+  let remarque = document.getElementById("remarque").value || "";
+
+  db.ref("users/" + currentUser).once("value").then(userSnap => {
+
+    let teacherName = userSnap.val().name;
+
+    let data = {
+      number: ficheNumber,
+      teacher: teacherName,
+      matiere,
+      classe,
+      date,
+      heure,
+      duree,
+      objectif,
+      prerequis,
+      materiel,
+      intro,
+      developpement,
+      conclusion,
+      evaluation,
+      remarque
+    };
+
+    db.ref("fiches/" + currentUser + "/" + id).set(data);
+
+    alert("Fiche enregistrée ✅");
+
+    editFicheId = null;
+    clearForm();
+    loadFiches();
+  });
+}
   
 // 🔥 CHARGER LISTE  
-function renderFiche(id, d){  
-  
-  let box = document.getElementById("ficheList");  
-  
-  let div = document.createElement("div");  
-  
-  div.style.background = "#111b21";  
-  div.style.padding = "10px";  
-  div.style.margin = "10px";  
-  div.style.borderRadius = "10px";  
-  
-  div.innerHTML = `  
-    <b>${d.matiere}</b> - ${d.classe}<br>  
-    <small>${d.date} | ${d.teacher}</small><br><br>  
-  
-    <button onclick="editFiche('${id}')">✏️</button>  
-    <button onclick="deleteFiche('${id}')">🗑</button>  
-    <button onclick="printFiche('${id}')">🖨</button>  
-  `;  
-  
-  box.appendChild(div);  
+function renderFiche(id, d){
+
+  if(!d) return;
+
+  let box = document.getElementById("ficheList");
+
+  let div = document.createElement("div");
+
+  div.style.background = "#111b21";
+  div.style.padding = "10px";
+  div.style.margin = "10px";
+  div.style.borderRadius = "10px";
+
+  div.innerHTML = `
+    <b>${d.matiere || ""}</b> - ${d.classe || ""}<br>
+    <small>${d.date || ""} | ${d.teacher || ""}</small><br><br>
+    <b>${d.number || ""}</b><br>
+
+    <button onclick="editFiche('${id}')">✏️</button>
+    <button onclick="deleteFiche('${id}')">🗑</button>
+    <button onclick="printFiche('${id}')">🖨</button>
+  `;
+
+  box.appendChild(div);
 }  
   
 // 🔥 MODIFIER  
@@ -943,7 +2035,7 @@ function editFiche(id){
     document.getElementById("classe").value = d.classe;  
     document.getElementById("date").value = d.date;  
     document.getElementById("objectif").value = d.objectif;  
-    document.getElementById("contenu").value = d.contenu;  
+    document.getElementById("developpement").value = d.developpement;  
     document.getElementById("evaluation").value = d.evaluation;  
   
     editFicheId = id;  
@@ -962,14 +2054,24 @@ function deleteFiche(id){
 }  
   
 // 🔥 VIDER FORMULAIRE  
-function clearForm(){  
-  document.getElementById("matiere").value = "";  
-  document.getElementById("classe").value = "";  
-  document.getElementById("date").value = "";  
-  document.getElementById("objectif").value = "";  
-  document.getElementById("contenu").value = "";  
-  document.getElementById("evaluation").value = "";  
-}  
+function clearForm(){
+  document.getElementById("matiere").value = "";
+  document.getElementById("classe").value = "";
+  document.getElementById("date").value = "";
+  document.getElementById("heure").value = "";
+  document.getElementById("duree").value = "";
+
+  document.getElementById("objectif").value = "";
+  document.getElementById("prerequis").value = "";
+  document.getElementById("materiel").value = "";
+
+  document.getElementById("intro").value = "";
+  document.getElementById("developpement").value = "";
+  document.getElementById("conclusion").value = "";
+
+  document.getElementById("evaluation").value = "";
+  document.getElementById("remarque").value = "";
+}
 function searchFiches(){  
   let text = document.getElementById("searchFiche").value.toLowerCase();  
   
@@ -1001,31 +2103,999 @@ function filterMatiere(m){
   });  
 }  
     
-  function printFiche(id){  
-  db.ref("fiches/" + currentUser + "/" + id).once("value").then(snap => {  
-    let d = snap.val();  
-  
-    let w = window.open("");  
-  
-    w.document.write(`  
-      <h2>Fiche de préparation</h2>  
-      <p><b>Enseignant:</b> ${d.teacher}</p>  
-      <p><b>Matière:</b> ${d.matiere}</p>  
-      <p><b>Classe:</b> ${d.classe}</p>  
-      <p><b>Date:</b> ${d.date}</p>  
-      <hr>  
-      <p>${d.developpement}</p>  
-    `);  
-  
-    w.print();  
-  });  
-}  
+function printFiche(id){
+
+  db.ref("fiches/" + currentUser + "/" + id).once("value").then(snap => {
+
+    let d = snap.val();
+
+    let w = window.open("", "", "width=900,height=1000");
+
+    w.document.write(`
+<html>
+<head>
+<title>Fiche Ministère</title>
+
+<style>
+
+@page {
+  size: A4;
+  margin: 10mm;
+}
+
+body{
+  font-family: Arial;
+  margin:0;
+  padding:0;
+  color:#000;
+}
+
+/* CADRE GLOBAL A4 */
+.sheet{
+  width: 100%;
+  height: 100%;
+  border: 2px solid #000;
+  padding: 10px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* HEADER MINISTÈRE */
+.header{
+  text-align:center;
+  border-bottom:2px solid #000;
+  padding-bottom:5px;
+  margin-bottom:8px;
+}
+
+.header h1{
+  font-size:16px;
+  margin:0;
+  text-transform:uppercase;
+}
+
+.sub{
+  font-size:11px;
+}
+
+/* NUMÉRO */
+.num{
+  position:absolute;
+  top:15px;
+  right:20px;
+  font-weight:bold;
+  font-size:12px;
+}
+
+/* GRID INFOS */
+.grid{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:5px;
+  font-size:11px;
+  margin-bottom:5px;
+}
+
+/* BLOCS */
+.block{
+  border:1px solid #000;
+  padding:5px;
+  margin-top:5px;
+  font-size:11px;
+  line-height:1.3;
+}
+
+.title{
+  font-weight:bold;
+  font-size:12px;
+  border-bottom:1px solid #000;
+  margin-bottom:3px;
+}
+
+/* SUPPRESSION SCROLL */
+*{
+  overflow:hidden;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="sheet">
+
+  <div class="num">${d.number || ""}</div>
+
+  <div class="header">
+    <h1>MINISTÈRE DE L’ENSEIGNEMENT</h1>
+    <div class="sub">FICHE DE PRÉPARATION DE COURS</div>
+  </div>
+
+  <div class="grid">
+    <div><b>Enseignant :</b> ${d.teacher || ""}</div>
+    <div><b>Date :</b> ${d.date || ""}</div>
+    <div><b>Matière :</b> ${d.matiere || ""}</div>
+    <div><b>Classe :</b> ${d.classe || ""}</div>
+    <div><b>Heure :</b> ${d.heure || ""}</div>
+    <div><b>Durée :</b> ${d.duree || ""}</div>
+  </div>
+
+  <div class="block">
+    <div class="title">Objectifs</div>
+    ${d.objectif || ""}
+  </div>
+
+  <div class="block">
+    <div class="title">Prérequis</div>
+    ${d.prerequis || ""}
+  </div>
+
+  <div class="block">
+    <div class="title">Déroulement</div>
+    ${d.developpement || ""}
+  </div>
+
+  <div class="block">
+    <div class="title">Évaluation</div>
+    ${d.evaluation || ""}
+  </div>
+
+</div>
+
+</body>
+</html>
+`);
+
+    w.document.close();
+    w.print();
+
+  });
+
+}
+function loadFiches(){
+
+  let box = document.getElementById("ficheList");
+  box.innerHTML = "";
+
+  db.ref("fiches/" + currentUser).once("value").then(snap => {
+
+    snap.forEach(f => {
+      renderFiche(f.key, f.val());
+    });
+
+  });
+
+}    
+function formatTime(ts){
+
+  let date = new Date(ts);
+  let now = new Date();
+
+  // remise à zéro des heures pour comparer les jours
+  let today = new Date();
+  today.setHours(0,0,0,0);
+
+  let msgDay = new Date(date);
+  msgDay.setHours(0,0,0,0);
+
+  let diffDays = Math.round((today - msgDay) / (1000 * 60 * 60 * 24));
+
+  let time = date.toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit"
+  });
+
+  // Aujourd’hui
+  if(diffDays === 0){
+    return time;
+  }
+
+  // Hier
+  if(diffDays === 1){
+    return `<i>Hier</i> ${time}`;
+  }
+
+  // Autres jours
+  return `<i>${date.toLocaleDateString()}</i> ${time}`;
+}
+
+ function generateFicheNumber(){
+  return "FICHE-" + new Date().getFullYear() + "-" + Date.now().toString().slice(-6);
+}
+function openProfile(){
+
+  go("profilePage");
+
+  db.ref("users/" + currentUser)
+  .once("value")
+  .then(snap => {
+
+    let u = snap.val();
+
+    document.getElementById("profilePhoto").src = u.photo;
+
+    document.getElementById("profileName").value = u.name;
+
+    document.getElementById("profileStatus").value = u.status || "";
     
+    document.getElementById("profilePhoto").onclick = () => {
+
+    document.getElementById("fileInput").click();
+
+};
+
+  });
+
+}
+
+function loadStatus(){
+
+  let box = document.getElementById("statusList");
+
+  box.innerHTML = "";
+
+  db.ref("status").once("value").then(snap => {
+
+    snap.forEach(s => {
+
+      let d = s.val();
+
+      let div = document.createElement("div");
+
+      div.style.background = "#111b21";
+      div.style.margin = "10px";
+      div.style.padding = "10px";
+      div.style.borderRadius = "15px";
+
+      div.innerHTML = `
+
+      <img src="${d.photo}"
+      width="50"
+      height="50"
+      style="border-radius:50%;">
+
+      <h3>${d.name}</h3>
+
+      <img src="${d.image}"
+      style="
+      width:100%;
+      border-radius:15px;
+      margin-top:10px;
+      ">
+
+      `;
+
+      box.appendChild(div);
+
+    });
+
+  });
+
+}
+
+function openStatus(){
+
+  go("statusPage");
+
+  let box = document.getElementById("statusList");
+
+  box.innerHTML = "";
+
+  db.ref("status").once("value")
+  .then(snap => {
+
+    snap.forEach(s => {
+
+      let d = s.val();
+
+      box.innerHTML += `
+      <div style="
+      background:#111b21;
+      padding:10px;
+      margin:10px;
+      border-radius:10px;
+      ">
+      <b>${d.name}</b><br>
+      ${d.text}
+      </div>
+      `;
+
+    });
+
+  });
+
+}
+function addStatus(){
+
+  let text = prompt("Texte du statut ?");
+
+  let input = document.createElement("input");
+  input.type = "file";
+  input.accept = "image/*";
+
+  input.onchange = function(e){
+
+    let file = e.target.files[0];
+    if(!file) return;
+
+    let reader = new FileReader();
+
+    reader.onload = function(){
+
+      db.ref("users/" + currentUser)
+      .once("value")
+      .then(snap => {
+
+        let u = snap.val();
+
+        db.ref("status/" + currentUser).set({
+
+          name: u.name,
+          photo: u.photo,
+          image: reader.result,
+          text: text || "",
+          time: Date.now()
+
+        });
+
+        alert("Statut publié ✅");
+
+      });
+
+    };
+
+    reader.readAsDataURL(file);
+
+  };
+
+  input.click();
+}
+function deleteMsg(msgId, chatId){
+
+  let mode = prompt(
+  "1 = Supprimer pour moi\n2 = Supprimer pour tous"
+  );
+
+  if(mode === "2"){
+
+    db.ref("chats/" + chatId + "/messages/" + msgId)
+    .update({
+      text:"🚫 Message supprimé",
+      image:"",
+      deleted:true
+    });
+
+  }else{
+
+    db.ref("chats/" + chatId + "/messages/" + msgId)
+    .remove();
+
+  }
+
+}
+
+function saveProfile(){
+
+  let name = document.getElementById("profileName").value;
+
+  let status = document.getElementById("profileStatus").value;
+
+  db.ref("users/" + currentUser).update({
+    name,
+    status
+  });
+
+  alert("Profil mis à jour ✅");
+
+}   
     
-    
-    
-    
-    
+ function openUserProfile(uid){
+
+  db.ref("users/" + uid)
+  .once("value")
+  .then(snap => {
+
+    let u = snap.val();
+    if(!u) return;
+
+    let photo = document.getElementById("userProfilePhoto");
+    let name = document.getElementById("userProfileName");
+    let status = document.getElementById("userProfileStatus");
+
+    if(photo) photo.src = u.photo || "";
+    if(name) name.innerText = u.name || "";
+    if(status) status.innerText = u.status || "";
+
+    go("userProfilePage");
+  });
+}
+
+ function typing(){
+
+  if(!currentChat) return;
+
+  db.ref("typing/" + getChatId(currentUser, currentChat))
+  .set("Écrit...");
+
+  clearTimeout(window.typingTimeout);
+
+  window.typingTimeout = setTimeout(() => {
+
+    db.ref("typing/" + getChatId(currentUser, currentChat))
+    .remove();
+
+  }, 1500);
+
+}   
+document.getElementById("fileInput")
+.addEventListener("change", function(e){
+
+  let file = e.target.files[0];
+
+  if(!file) return;
+
+  let reader = new FileReader();
+
+  reader.onload = function(){
+
+    let chatId = getChatId(currentUser,currentChat);
+
+    db.ref("chats/" + chatId + "/messages")
+    .push({
+
+      sender:currentUser,
+      image:reader.result,
+      time:Date.now(),
+      status:"sent"
+
+    });
+
+  };
+
+  reader.readAsDataURL(file);
+
+});
+
+// ===== CHARGER THEME =====
+window.onload = function(){
+  let theme = localStorage.getItem("theme");
+
+  if(theme === "light"){
+    document.body.classList.add("light");
+  }
+};
+
+// ===== TOGGLE THEME =====
+function toggleTheme(){
+  document.body.classList.toggle("light");
+
+  if(document.body.classList.contains("light")){
+    localStorage.setItem("theme","light");
+  }else{
+    localStorage.setItem("theme","dark");
+  }
+}
+window.addEventListener("DOMContentLoaded", () => {
+
+  const fileInput = document.getElementById("fileInput");
+
+  if (!fileInput) return;
+
+  fileInput.addEventListener("change", function (e) {
+
+    let file = e.target.files[0];
+    if (!file) return;
+
+    let reader = new FileReader();
+
+    reader.onload = function () {
+
+      let image = reader.result;
+
+      let photo = document.getElementById("profilePhoto");
+      if (photo) photo.src = image;
+
+      if (currentUser) {
+        db.ref("users/" + currentUser).update({
+          photo: image
+        });
+      }
+
+      alert("Photo mise à jour ✅");
+    };
+
+    reader.readAsDataURL(file);
+  });
+
+});
+// ================= CREER ECOLE =================
+function createSchool(){
+
+  let name = document.getElementById("schoolName").value;
+  let desc = document.getElementById("schoolDesc").value;
+
+  if(!name) return alert("Nom requis");
+
+  let schoolId = "school_" + Date.now();
+
+  db.ref("schools/" + schoolId).set({
+
+    info: {
+      name,
+      description: desc,
+      createdBy: currentUser,
+      createdAt: Date.now()
+    },
+
+    admins: {
+      [currentUser]: true
+    },
+
+    students: {},
+    teachers: {},
+    courses: {},
+    notes: {}
+  });
+
+  db.ref("users/" + currentUser + "/schools/" + schoolId).set(true);
+  db.ref("users/" + currentUser + "/role").set("admin");
+
+  currentSchool = schoolId;
+
+  go("schoolDashboard");
+  loadSchoolDashboard(schoolId);
+}
+// ================= CHARGER DASHBOARD ECOLE =================
+function loadSchoolDashboard(schoolId){
+
+  currentSchool = schoolId;
+
+  // 🔐 vérifier accès AVANT de charger
+  checkSchoolAccess(currentSchool).then(isAllowed => {
+
+    if (!isAllowed) {
+      alert("Accès refusé");
+      return;
+    }
+
+    // ✅ SI autorisé → charger dashboard
+
+    db.ref("schools/" + schoolId + "/info").once("value")
+    .then(snap => {
+
+      let info = snap.val();
+
+      document.getElementById("schoolNameTitle").innerText = info.name;
+      document.getElementById("schoolDescTitle").innerText = info.description;
+
+    });
+
+    // COUNT ÉLÈVES
+    db.ref("schools/" + schoolId + "/students")
+    .on("value", snap => {
+      document.getElementById("countStudents").innerText = snap.numChildren();
+    });
+
+    // COUNT ENSEIGNANTS
+    db.ref("schools/" + schoolId + "/teachers")
+    .on("value", snap => {
+      document.getElementById("countTeachers").innerText = snap.numChildren();
+    });
+
+    // COUNT NOTES
+    db.ref("schools/" + schoolId + "/notes")
+    .on("value", snap => {
+      document.getElementById("countNotes").innerText = snap.numChildren();
+    });
+
+    // COUNT COURS
+    db.ref("schools/" + schoolId + "/courses")
+    .on("value", snap => {
+      document.getElementById("countCourses").innerText = snap.numChildren();
+    });
+
+  });
+
+}
+
+function loadMySchools(){
+
+  let box = document.getElementById("schoolsList");
+  box.innerHTML = "Chargement...";
+
+  db.ref("users/" + currentUser + "/schools").once("value")
+  .then(snap => {
+
+    box.innerHTML = "";
+
+    if(!snap.exists()){
+      box.innerHTML = "Aucune école trouvée";
+      return;
+    }
+
+    snap.forEach(s => {
+
+      let schoolId = s.key;
+
+      db.ref("schools/" + schoolId + "/info")
+      .once("value")
+      .then(infoSnap => {
+
+        let info = infoSnap.val();
+
+        let div = document.createElement("div");
+
+        div.style.background = "#111b21";
+        div.style.padding = "15px";
+        div.style.margin = "10px";
+        div.style.borderRadius = "10px";
+        div.style.cursor = "pointer";
+
+        div.innerHTML = `
+          <b>🏫 ${info.name}</b><br>
+          <small>${info.description || ""}</small>
+        `;
+
+        // 🔥 OUVRIR L'ÉCOLE
+        div.onclick = () => openSchool(schoolId);
+
+        box.appendChild(div);
+
+      });
+
+    });
+
+  });
+
+}
+function loadStudents(){
+
+  let box = document.getElementById("studentsList");
+  box.innerHTML = "Chargement...";
+
+  db.ref("schools/" + currentSchool + "/students")
+  .on("value", snap => {
+
+    box.innerHTML = "";
+
+    if(!snap.exists()){
+      box.innerHTML = "Aucun élève";
+      return;
+    }
+
+    snap.forEach(s => {
+
+      let d = s.val();
+
+      let div = document.createElement("div");
+
+      div.style.background = "#111b21";
+      div.style.padding = "12px";
+      div.style.margin = "10px";
+      div.style.borderRadius = "10px";
+      div.style.cursor = "pointer";
+
+      div.innerHTML = `
+        <b>🎓 ${d.name}</b><br>
+        <small>Classe : ${d.classe}</small><br>
+        <small>Matricule : ${d.matricule}</small>
+      `;
+
+      // ouvrir fiche élève
+      div.onclick = () => openStudent(s.key);
+
+      box.appendChild(div);
+
+    });
+
+  });
+
+}
+function addStudent(){
+
+  if(!currentSchool){
+    alert("❌ Aucune école sélectionnée");
+    return;
+  }
+
+  let name = document.getElementById("stuName").value;
+  let classe = document.getElementById("stuClasse").value;
+
+  if(!name || !classe){
+    alert("Remplis tous les champs");
+    return;
+  }
+
+  let id = "stu_" + Date.now();
+  let matricule = "EL-" + Math.floor(100000 + Math.random()*900000);
+
+  db.ref("schools/" + currentSchool + "/students/" + id).set({
+    name,
+    classe,
+    matricule,
+    createdAt: Date.now()
+  });
+
+  document.getElementById("stuName").value = "";
+  document.getElementById("stuClasse").value = "";
+
+  renderStudents();
+}
+function searchStudents(){
+
+  let text = document.getElementById("searchStudent").value.toLowerCase();
+
+  db.ref("schools/" + currentSchool + "/students")
+  .once("value")
+  .then(snap => {
+
+    let box = document.getElementById("studentsTable");
+    box.innerHTML = "";
+
+    snap.forEach(s => {
+
+      let d = s.val();
+
+      if(d.name.toLowerCase().includes(text) || d.classe.toLowerCase().includes(text)){
+
+        let div = document.createElement("div");
+
+        div.style.background = "#111b21";
+        div.style.margin = "10px 0";
+        div.style.padding = "10px";
+        div.style.borderRadius = "10px";
+
+        div.innerHTML = `
+          <b>${d.name}</b><br>
+          Classe: ${d.classe}<br>
+          Matricule: ${d.matricule}
+        `;
+
+        box.appendChild(div);
+
+      }
+
+    });
+
+  });
+
+}
+
+function openPage(page){
+
+  document.querySelectorAll(".page")
+  .forEach(p => p.classList.remove("active"));
+
+  document.getElementById(page).classList.add("active");
+
+  // 🔥 scanner auto si paramètres
+  if(page === "settingsPage"){
+    setTimeout(() => {
+      startQRScanner();
+    }, 500);
+  }
+
+  if(page === "chat"){
+    loadContacts();
+  }
+
+}
+function checkSchoolAccess() {
+
+  return new Promise((resolve) => {
+
+    let user = firebase.auth().currentUser;
+    if (!user) return resolve(false);
+
+    db.ref("users/" + user.uid).once("value")
+    .then(snap => {
+
+      let data = snap.val() || {};
+
+      if (data.role === "admin") return resolve(true);
+
+      if (data.schools && data.schools[currentSchool]) {
+        return resolve(true);
+      }
+
+      resolve(false);
+
+    }).catch(() => resolve(false));
+
+  });
+
+}
+function openSchool(schoolId) {
+
+  if (!schoolId) {
+    console.error("schoolId manquant");
+    return;
+  }
+
+  loadSchoolDashboard(schoolId);
+
+}
+
+function renderStudents(){
+
+  let box = document.getElementById("studentsTable");
+  box.innerHTML = "";
+
+  if(!currentSchool){
+    box.innerHTML = "❌ École non sélectionnée";
+    return;
+  }
+
+  let search = document.getElementById("searchStudent")?.value?.toLowerCase() || "";
+
+  db.ref("schools/" + currentSchool + "/students")
+  .once("value")
+  .then(snap => {
+
+    if(!snap.exists()){
+      box.innerHTML = "Aucun élève";
+      return;
+    }
+
+    snap.forEach(s => {
+
+      let d = s.val();
+
+      if(
+        d.name.toLowerCase().includes(search) ||
+        d.classe.toLowerCase().includes(search)
+      ){
+
+        let div = document.createElement("div");
+
+        div.style.background = "#111b21";
+        div.style.margin = "10px 0";
+        div.style.padding = "10px";
+        div.style.borderRadius = "10px";
+
+        div.innerHTML = `
+          <b>👤 ${d.name}</b><br>
+          📚 Classe: ${d.classe}<br>
+          🆔 Matricule: ${d.matricule}<br>
+
+          <button onclick="editStudent('${s.key}')">✏️</button>
+          <button onclick="deleteStudent('${s.key}')">🗑</button>
+          <button onclick="generateQR('${s.key}')">📱 QR</button>
+        `;
+
+        box.appendChild(div);
+      }
+
+    });
+
+  });
+}
+function editStudent(id){
+
+  let newName = prompt("Nouveau nom ?");
+  let newClass = prompt("Nouvelle classe ?");
+
+  if(!newName || !newClass) return;
+
+  db.ref("schools/" + currentSchool + "/students/" + id)
+  .update({
+    name: newName,
+    classe: newClass
+  });
+
+  renderStudents();
+}
+function deleteStudent(id){
+
+  let confirmDelete = confirm("Supprimer cet élève ?");
+
+  if(!confirmDelete) return;
+
+  db.ref("schools/" + currentSchool + "/students/" + id).remove();
+
+  renderStudents();
+}
+function generateQR(studentId){
+
+  let linkCode = "LINK-" + Date.now();
+
+  // ⏱️ expiration = maintenant + 3 min
+  let expireAt = Date.now() + (3 * 60 * 1000);
+
+  let qrData = {
+    schoolId: currentSchool,
+    studentId: studentId,
+    linkCode: linkCode,
+    expireAt: expireAt
+  };
+
+  // 🔥 sauvegarde dans Firebase
+  db.ref("schools/" + currentSchool + "/students/" + studentId)
+  .update({
+    linkCode,
+    expireAt
+  });
+
+  let textQR = JSON.stringify(qrData);
+
+  let win = window.open("", "", "width=300,height=350");
+
+  win.document.write(`
+    <h3 style="text-align:center;">QR Élève</h3>
+    <p style="text-align:center;">Expire dans 3 min</p>
+    <div id="qrcode" style="display:flex;justify-content:center;"></div>
+  `);
+
+  win.document.close();
+
+  setTimeout(() => {
+    new QRCode(win.document.getElementById("qrcode"), {
+      text: textQR,
+      width: 200,
+      height: 200
+    });
+  }, 300);
+}
+
+function openStudent(studentId){
+
+  db.ref("schools/" + currentSchool + "/students/" + studentId)
+  .once("value")
+  .then(snap => {
+
+    let s = snap.val();
+
+    alert(
+      "🎓 " + s.name +
+      "\nClasse: " + s.classe +
+      "\nMatricule: " + s.matricule
+    );
+
+    // 👉 ici plus tard on met QR LINK
+  });
+
+}
+function exitSchool(){
+  navMode = "app";
+  currentSchool = null;
+  go("dashboard");
+}
+function openSchool(schoolId){
+  currentSchool = schoolId;
+  go("schoolDashboard");
+  loadSchoolDashboard(schoolId);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     
     
     
