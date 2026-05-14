@@ -14,542 +14,541 @@
   
 <style>
   
-.container{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
+.container{        
+  display:flex;        
+  flex-direction:column;        
+  align-items:center;        
+  justify-content:center;        
+}        
+        
+/* ===== BASE ===== */        
+*{        
+  box-sizing: border-box;        
+}        
+        
+body{        
+  margin:0;        
+  font-family: Arial, sans-serif;        
+  background:#0b141a;        
+  color:white;        
+}        
+button.fab{        
+  all: unset;        
+}        
+        
+.msg{        
+  padding:12px;        
+  margin:8px;        
+  border-radius:18px;        
+  max-width:80%;        
+  word-wrap:break-word;        
+  box-shadow:0 2px 10px rgba(0,0,0,0.3);        
+  animation:fadeIn 0.2s ease;        
+}        
+        
+@keyframes fadeIn{        
+  from{        
+    opacity:0;        
+    transform:translateY(10px);        
+  }        
+  to{        
+    opacity:1;        
+    transform:translateY(0);        
+  }        
+}        
+        
+.chatBox{        
+  padding-bottom:80px;        
+  height:70vh;        
+  overflow-y:auto;        
+  padding:15px;        
+  background:        
+  linear-gradient(        
+  rgba(11,20,26,.95),        
+  rgba(11,20,26,.95)        
+  ),        
+  url('https://i.imgur.com/7v1ZK8b.png');        
+  background-size:cover;        
+}        
+        
+.msg{        
+  padding:12px;        
+  border-radius:18px;        
+  margin:8px 0;        
+  max-width:80%;        
+  position:relative;        
+  animation:fade .2s ease;        
+  font-size:15px;        
+}        
+        
+#discussion{        
+  padding:0;        
+  background:#0b141a;        
+}        
+        
+#chatWith{        
+  background:#202c33;        
+  width:100%;        
+  padding:15px;        
+  margin:0;        
+  text-align:left;        
+  position:sticky;        
+  top:0;        
+}        
+#chat{        
+  position:relative;        
+  overflow:hidden;        
+}        
+#contactsBox{        
+  width:100%;        
+  padding-bottom:120px;        
+}        
+        
+.chatBox{        
+  flex:1;        
+  width:100%;        
+  overflow-y:auto;        
+}        
+        
+        
+.me{        
+  background:#25D366;        
+  color:#000;        
+  margin-left:auto;        
+  border-bottom-right-radius:5px;        
+}        
+        
+.other{        
+  background:#202c33;        
+  color:white;        
+  margin-right:auto;        
+  border-bottom-left-radius:5px;        
+}        
+        
+@keyframes fade{        
+  from{        
+    opacity:0;        
+    transform:translateY(10px);        
+  }        
+  to{        
+    opacity:1;        
+    transform:translateY(0);        
+  }        
+}        
+        
+/* ===== PAGES ===== */        
+.page {        
+  display: none; /* 🔥 cacher toutes les pages par défaut */        
+  min-height: 100vh;        
+  padding: 20px;        
+        
+  flex-direction: column;        
+  justify-content: center;        
+  align-items: center;        
+  text-align: center;        
+}        
+        
+.page > div {        
+  width: 100%;        
+  max-width: 500px;        
+  margin: auto; /* 🔥 centre le bloc */        
+}        
+        
+.page.active{        
+  display:flex;        
+  flex-direction:column;        
+  justify-content:center;        
+}        
+        
+/* ===== TITRES ===== */        
+h2{        
+  color:#25D366;        
+  margin-bottom:20px;        
+}        
+/* ===== FAB BUTTON ===== */        
+/* ===== FAB BUTTON STABLE ===== */        
+.fab{        
+  position:fixed;        
+  bottom:20px;        
+  right:20px;        
+        
+  width:56px !important;        
+  height:56px !important;        
+  max-width:56px !important;        
+  max-height:56px !important;        
+        
+  min-width:56px !important;        
+  min-height:56px !important;        
+        
+  display:flex !important;        
+  align-items:center !important;        
+  justify-content:center !important;        
+        
+  border-radius:50% !important;        
+        
+  background:#25D366 !important;        
+  color:#000 !important;        
+        
+  font-size:30px !important;        
+  font-weight:bold !important;        
+        
+  line-height:1 !important;        
+        
+  padding:0 !important;        
+  margin:0 !important;        
+        
+  border:none !important;        
+        
+  box-sizing:border-box !important;        
+        
+  flex:0 0 56px !important;        
+        
+  overflow:hidden !important;        
+        
+  cursor:pointer;        
+        
+  z-index:9999;        
+        
+  box-shadow:0 10px 20px rgba(0,0,0,0.25);        
+        
+  transition:transform 0.25s ease;        
+}        
+/* rotation propre */        
+.fab.active{        
+  transform:rotate(135deg);        
+}        
+        
+/* ===== MENU WHATSAPP STYLE ===== */        
+.fab-menu{        
+  position:fixed;        
+        
+  bottom:85px;        
+  right:20px;        
+        
+  display:flex;        
+  flex-direction:column;        
+  align-items:flex-end;        
+        
+  gap:12px;        
+        
+  z-index:9998;        
+        
+  opacity:0;        
+  visibility:hidden;        
+  transform:translateY(15px);        
+        
+  transition:0.25s ease;        
+}        
+        
+/* affichage */        
+.fab-menu.show{        
+  opacity:1;        
+  visibility:visible;        
+  transform:translateY(0);        
+}        
+        
+/* boutons menu */        
+.fab-menu button{        
+        
+  width:auto;        
+  min-width:200px;        
+        
+  padding:12px 16px;        
+        
+  border:none;        
+  border-radius:16px;        
+        
+  background:#202c33;        
+  color:white;        
+        
+  font-size:15px;        
+  font-weight:bold;        
+        
+  display:flex;        
+  align-items:center;        
+  justify-content:flex-start;        
+        
+  box-shadow:0 5px 15px rgba(0,0,0,0.35);        
+        
+  cursor:pointer;        
+        
+  transition:0.2s;        
+}        
+        
+/* hover */        
+.fab-menu button:hover{        
+  transform:scale(1.03);        
+  background:#2a3942;        
+}        
+        
+/* light mode */        
+body.light .fab-menu button{        
+  background:white;        
+  color:black;        
+}        
+/* ===== INPUTS ===== */        
+input, select, textarea{        
+  width:100%;        
+  padding:12px;        
+  margin:8px 0;        
+  border-radius:10px;        
+  border:none;        
+  outline:none;        
+  font-size:16px; /* important pour Android */        
+}        
+        
+/* ===== BOUTONS ===== */        
+button{        
+  width:50%;        
+  padding:12px;        
+  margin:8px auto;        
+  border:none;        
+  border-radius:10px;        
+  background:#25D366;        
+  color:black;        
+  font-weight:bold;        
+  cursor:pointer;        
+  display:block;        
+}        
+        
+/* ===== BOXES ===== */        
+#eleveBox, #teacherBox{        
+  background:#111b21;        
+  padding:15px;        
+  border-radius:15px;        
+  margin-top:10px;        
+  justify-content:center;        
+}        
+/* ===== ROOT THEMES ===== */        
+:root{        
+  --bg:#0b141a;        
+  --card:#111b21;        
+  --text:#ffffff;        
+  --sub:#aaa;        
+  --primary:#25D366;        
+}        
+        
+/* 🌞 LIGHT MODE */        
+body.light{        
+  --bg:#f5f6f6;        
+  --card:#ffffff;        
+  --text:#111;        
+  --sub:#555;        
+}        
+        
+/* APPLY GLOBAL */        
+body{        
+  background:var(--bg);        
+  color:var(--text);        
+  transition:0.3s;        
+}        
+        
+/* ===== HOME ===== */        
+.home-container{        
+  position:relative;        
+  min-height:100vh;        
+  display:flex;        
+  flex-direction:column;        
+  align-items:center;        
+  justify-content:center;        
+  text-align:center;        
+  padding:20px;        
+}        
+        
+/* LOGO */        
+.logo{        
+  width:95px;        
+  height:95px;        
+  border-radius:50%;        
+  background:linear-gradient(135deg,var(--primary),#128C7E);        
+  display:flex;        
+  align-items:center;        
+  justify-content:center;        
+  font-size:40px;        
+  box-shadow:0 10px 25px rgba(0,0,0,0.3);        
+  animation:pop 0.8s ease;        
+}        
+        
+@keyframes pop{        
+  from{transform:scale(0);opacity:0;}        
+  to{transform:scale(1);opacity:1;}        
+}        
+        
+/* TITLE */        
+.title{        
+  color:var(--primary);        
+  font-size:28px;        
+  margin-top:10px;        
+}        
+        
+/* SUB */        
+.subtitle{        
+  color:var(--sub);        
+  font-size:14px;        
+  margin-bottom:20px;        
+}        
+        
+/* CARD */        
+.card{        
+  background:var(--card);        
+  padding:18px;        
+  border-radius:15px;        
+  width:90%;        
+  max-width:380px;        
+  box-shadow:0 10px 25px rgba(0,0,0,0.2);        
+  color:var(--sub);        
+  font-size:14px;        
+  line-height:1.8;        
+}        
+        
+/* BUTTON */        
+.btn{        
+  width:90%;        
+  max-width:380px;        
+  margin-top:20px;        
+  padding:14px;        
+  border:none;        
+  border-radius:12px;        
+  background:var(--primary);        
+  color:black;        
+  font-weight:bold;        
+  font-size:16px;        
+  cursor:pointer;        
+  transition:0.2s;        
+}        
+        
+.btn:hover{        
+  transform:scale(1.03);        
+}        
+        
+/* BOTTOM TEXT */        
+.bottom-text{        
+  margin-top:15px;        
+  color:var(--sub);        
+  font-size:13px;        
+}        
+        
+.bottom-text span{        
+  color:var(--primary);        
+  cursor:pointer;        
+  font-weight:bold;        
+}        
+/* CHAT INPUT toujours au-dessus du reste */        
+#discussion {        
+  position: relative;        
+}        
+        
+/* FAB = plus bas que le chat input */        
+.fab {        
+  z-index: 1000;        
+}        
+        
+/* MENU FAB */        
+.fab-menu {        
+  z-index: 1000;        
+}        
+        
+/* INPUT CHAT = PRIORITÉ MAX */        
+#discussion div[style*="position:fixed"] {        
+  z-index: 9999;        
+}        
+        
+        
+/* THEME BUTTON */        
+.theme-switch{        
+  position:absolute;        
+  top:15px;        
+  right:15px;        
+  background:var(--card);        
+  padding:8px 12px;        
+  border-radius:20px;        
+  font-size:14px;        
+  cursor:pointer;        
+  box-shadow:0 5px 15px rgba(0,0,0,0.2);        
+}        
+        
+        
+/* ===== CHAT ===== */        
+.chatBox{        
+  height:60vh;        
+  overflow-y:auto;        
+  background:#0f1a20;        
+  padding:10px;        
+  border-radius:15px;        
+  justify-content:center;        
+}        
+        
+/* ===== MESSAGES ===== */        
+.msg{        
+  padding:10px;        
+  margin:5px;        
+  border-radius:10px;        
+  max-width:75%;        
+  word-wrap:break-word;        
+}        
+        
+.me{        
+  background:#25D366;        
+  color:black;        
+  margin-left:auto;        
+  text-align:right;        
+}        
+        
+.other{        
+  background:#1f2c34;        
+  margin-right:auto;        
+}        
+        
+/* ===== RESPONSIVE MOBILE ===== */        
+@media (max-width:600px){        
+  .page{        
+    padding:10px;        
+  }        
+        
+  h2{        
+    font-size:20px;        
+  }        
+}        
+        
+/* ===== RESPONSIVE PC ===== */        
+@media (min-width:900px){        
+  .page > div{        
+    max-width:600px;        
+  }        
+}        
+.card-grid{        
+  display:grid;        
+  grid-template-columns:repeat(2,1fr);        
+  gap:15px;        
+  margin-top:15px;        
+}        
+        
+.dash-card{        
+  background:#111b21;        
+  padding:20px;        
+  border-radius:15px;        
+  text-align:center;        
+  cursor:pointer;        
+  transition:0.2s;        
+  box-shadow:0 5px 15px rgba(0,0,0,0.2);        
+}        
+        
+.dash-card:hover{        
+  transform:scale(1.05);        
+  background:#1b2a33;        
+}        
+        
+.dash-card b{        
+  display:block;        
+  margin-top:8px;        
+  font-size:16px;        
+}        
+        
+.dash-card p{        
+  color:#25D366;        
+  font-weight:bold;        
+  margin-top:5px;        
 }
-
-/* ===== BASE ===== */
-*{
-  box-sizing: border-box;
-}
-
-body{
-  margin:0;
-  font-family: Arial, sans-serif;
-  background:#0b141a;
-  color:white;
-}
-button.fab{
-  all: unset;
-}
-
-.msg{
-  padding:12px;
-  margin:8px;
-  border-radius:18px;
-  max-width:80%;
-  word-wrap:break-word;
-  box-shadow:0 2px 10px rgba(0,0,0,0.3);
-  animation:fadeIn 0.2s ease;
-}
-
-@keyframes fadeIn{
-  from{
-    opacity:0;
-    transform:translateY(10px);
-  }
-  to{
-    opacity:1;
-    transform:translateY(0);
-  }
-}
-
-.chatBox{
-  padding-bottom:80px;
-  height:70vh;
-  overflow-y:auto;
-  padding:15px;
-  background:
-  linear-gradient(
-  rgba(11,20,26,.95),
-  rgba(11,20,26,.95)
-  ),
-  url('https://i.imgur.com/7v1ZK8b.png');
-  background-size:cover;
-}
-
-.msg{
-  padding:12px;
-  border-radius:18px;
-  margin:8px 0;
-  max-width:80%;
-  position:relative;
-  animation:fade .2s ease;
-  font-size:15px;
-}
-
-#discussion{
-  padding:0;
-  background:#0b141a;
-}
-
-#chatWith{
-  background:#202c33;
-  width:100%;
-  padding:15px;
-  margin:0;
-  text-align:left;
-  position:sticky;
-  top:0;
-}
-#chat{
-  position:relative;
-  overflow:hidden;
-}
-#contactsBox{
-  width:100%;
-  padding-bottom:120px;
-}
-
-.chatBox{
-  flex:1;
-  width:100%;
-  overflow-y:auto;
-}
-
-
-.me{
-  background:#25D366;
-  color:#000;
-  margin-left:auto;
-  border-bottom-right-radius:5px;
-}
-
-.other{
-  background:#202c33;
-  color:white;
-  margin-right:auto;
-  border-bottom-left-radius:5px;
-}
-
-@keyframes fade{
-  from{
-    opacity:0;
-    transform:translateY(10px);
-  }
-  to{
-    opacity:1;
-    transform:translateY(0);
-  }
-}
-
-/* ===== PAGES ===== */
-.page {
-  display: none; /* 🔥 cacher toutes les pages par défaut */
-  min-height: 100vh;
-  padding: 20px;
-
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-
-.page > div {
-  width: 100%;
-  max-width: 500px;
-  margin: auto; /* 🔥 centre le bloc */
-}
-
-.page.active{
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-}
-
-/* ===== TITRES ===== */
-h2{
-  color:#25D366;
-  margin-bottom:20px;
-}
-/* ===== FAB BUTTON ===== */
-/* ===== FAB BUTTON STABLE ===== */
-.fab{
-  position:fixed;
-  bottom:20px;
-  right:20px;
-
-  width:56px !important;
-  height:56px !important;
-  max-width:56px !important;
-  max-height:56px !important;
-
-  min-width:56px !important;
-  min-height:56px !important;
-
-  display:flex !important;
-  align-items:center !important;
-  justify-content:center !important;
-
-  border-radius:50% !important;
-
-  background:#25D366 !important;
-  color:#000 !important;
-
-  font-size:30px !important;
-  font-weight:bold !important;
-
-  line-height:1 !important;
-
-  padding:0 !important;
-  margin:0 !important;
-
-  border:none !important;
-
-  box-sizing:border-box !important;
-
-  flex:0 0 56px !important;
-
-  overflow:hidden !important;
-
-  cursor:pointer;
-
-  z-index:9999;
-
-  box-shadow:0 10px 20px rgba(0,0,0,0.25);
-
-  transition:transform 0.25s ease;
-}
-/* rotation propre */
-.fab.active{
-  transform:rotate(135deg);
-}
-
-/* ===== MENU WHATSAPP STYLE ===== */
-.fab-menu{
-  position:fixed;
-
-  bottom:85px;
-  right:20px;
-
-  display:flex;
-  flex-direction:column;
-  align-items:flex-end;
-
-  gap:12px;
-
-  z-index:9998;
-
-  opacity:0;
-  visibility:hidden;
-  transform:translateY(15px);
-
-  transition:0.25s ease;
-}
-
-/* affichage */
-.fab-menu.show{
-  opacity:1;
-  visibility:visible;
-  transform:translateY(0);
-}
-
-/* boutons menu */
-.fab-menu button{
-
-  width:auto;
-  min-width:200px;
-
-  padding:12px 16px;
-
-  border:none;
-  border-radius:16px;
-
-  background:#202c33;
-  color:white;
-
-  font-size:15px;
-  font-weight:bold;
-
-  display:flex;
-  align-items:center;
-  justify-content:flex-start;
-
-  box-shadow:0 5px 15px rgba(0,0,0,0.35);
-
-  cursor:pointer;
-
-  transition:0.2s;
-}
-
-/* hover */
-.fab-menu button:hover{
-  transform:scale(1.03);
-  background:#2a3942;
-}
-
-/* light mode */
-body.light .fab-menu button{
-  background:white;
-  color:black;
-}
-/* ===== INPUTS ===== */
-input, select, textarea{
-  width:100%;
-  padding:12px;
-  margin:8px 0;
-  border-radius:10px;
-  border:none;
-  outline:none;
-  font-size:16px; /* important pour Android */
-}
-
-/* ===== BOUTONS ===== */
-button{
-  width:50%;
-  padding:12px;
-  margin:8px auto;
-  border:none;
-  border-radius:10px;
-  background:#25D366;
-  color:black;
-  font-weight:bold;
-  cursor:pointer;
-  display:block;
-}
-
-/* ===== BOXES ===== */
-#eleveBox, #teacherBox{
-  background:#111b21;
-  padding:15px;
-  border-radius:15px;
-  margin-top:10px;
-  justify-content:center;
-}
-/* ===== ROOT THEMES ===== */
-:root{
-  --bg:#0b141a;
-  --card:#111b21;
-  --text:#ffffff;
-  --sub:#aaa;
-  --primary:#25D366;
-}
-
-/* 🌞 LIGHT MODE */
-body.light{
-  --bg:#f5f6f6;
-  --card:#ffffff;
-  --text:#111;
-  --sub:#555;
-}
-
-/* APPLY GLOBAL */
-body{
-  background:var(--bg);
-  color:var(--text);
-  transition:0.3s;
-}
-
-/* ===== HOME ===== */
-.home-container{
-  position:relative;
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  padding:20px;
-}
-
-/* LOGO */
-.logo{
-  width:95px;
-  height:95px;
-  border-radius:50%;
-  background:linear-gradient(135deg,var(--primary),#128C7E);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:40px;
-  box-shadow:0 10px 25px rgba(0,0,0,0.3);
-  animation:pop 0.8s ease;
-}
-
-@keyframes pop{
-  from{transform:scale(0);opacity:0;}
-  to{transform:scale(1);opacity:1;}
-}
-
-/* TITLE */
-.title{
-  color:var(--primary);
-  font-size:28px;
-  margin-top:10px;
-}
-
-/* SUB */
-.subtitle{
-  color:var(--sub);
-  font-size:14px;
-  margin-bottom:20px;
-}
-
-/* CARD */
-.card{
-  background:var(--card);
-  padding:18px;
-  border-radius:15px;
-  width:90%;
-  max-width:380px;
-  box-shadow:0 10px 25px rgba(0,0,0,0.2);
-  color:var(--sub);
-  font-size:14px;
-  line-height:1.8;
-}
-
-/* BUTTON */
-.btn{
-  width:90%;
-  max-width:380px;
-  margin-top:20px;
-  padding:14px;
-  border:none;
-  border-radius:12px;
-  background:var(--primary);
-  color:black;
-  font-weight:bold;
-  font-size:16px;
-  cursor:pointer;
-  transition:0.2s;
-}
-
-.btn:hover{
-  transform:scale(1.03);
-}
-
-/* BOTTOM TEXT */
-.bottom-text{
-  margin-top:15px;
-  color:var(--sub);
-  font-size:13px;
-}
-
-.bottom-text span{
-  color:var(--primary);
-  cursor:pointer;
-  font-weight:bold;
-}
-/* CHAT INPUT toujours au-dessus du reste */
-#discussion {
-  position: relative;
-}
-
-/* FAB = plus bas que le chat input */
-.fab {
-  z-index: 1000;
-}
-
-/* MENU FAB */
-.fab-menu {
-  z-index: 1000;
-}
-
-/* INPUT CHAT = PRIORITÉ MAX */
-#discussion div[style*="position:fixed"] {
-  z-index: 9999;
-}
-
-
-/* THEME BUTTON */
-.theme-switch{
-  position:absolute;
-  top:15px;
-  right:15px;
-  background:var(--card);
-  padding:8px 12px;
-  border-radius:20px;
-  font-size:14px;
-  cursor:pointer;
-  box-shadow:0 5px 15px rgba(0,0,0,0.2);
-}
-
-
-/* ===== CHAT ===== */
-.chatBox{
-  height:60vh;
-  overflow-y:auto;
-  background:#0f1a20;
-  padding:10px;
-  border-radius:15px;
-  justify-content:center;
-}
-
-/* ===== MESSAGES ===== */
-.msg{
-  padding:10px;
-  margin:5px;
-  border-radius:10px;
-  max-width:75%;
-  word-wrap:break-word;
-}
-
-.me{
-  background:#25D366;
-  color:black;
-  margin-left:auto;
-  text-align:right;
-}
-
-.other{
-  background:#1f2c34;
-  margin-right:auto;
-}
-
-/* ===== RESPONSIVE MOBILE ===== */
-@media (max-width:600px){
-  .page{
-    padding:10px;
-  }
-
-  h2{
-    font-size:20px;
-  }
-}
-
-/* ===== RESPONSIVE PC ===== */
-@media (min-width:900px){
-  .page > div{
-    max-width:600px;
-  }
-}
-.card-grid{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:15px;
-  margin-top:15px;
-}
-
-.dash-card{
-  background:#111b21;
-  padding:20px;
-  border-radius:15px;
-  text-align:center;
-  cursor:pointer;
-  transition:0.2s;
-  box-shadow:0 5px 15px rgba(0,0,0,0.2);
-}
-
-.dash-card:hover{
-  transform:scale(1.05);
-  background:#1b2a33;
-}
-
-.dash-card b{
-  display:block;
-  margin-top:8px;
-  font-size:16px;
-}
-
-.dash-card p{
-  color:#25D366;
-  font-weight:bold;
-  margin-top:5px;
-}
-
 
 
 
@@ -593,6 +592,22 @@ body{
 </head>  
   
 <body>  
+    
+    <div id="appToast" style="
+position:fixed;
+top:10px;
+left:50%;
+transform:translateX(-50%);
+background:#111b21;
+color:white;
+padding:12px 15px;
+border-radius:10px;
+z-index:99999;
+display:none;
+max-width:90%;
+text-align:center;
+font-size:14px;
+"></div>
   
 <!-- HOME -->  
 <div id="home" class="page active">
@@ -1041,11 +1056,11 @@ Retour
     </div>
 
     <!-- ENSEIGNANTS -->
-    <div class="dash-card" onclick="openPage('teachersPage')">
-      👨‍🏫<br>
-      <b>Enseignants</b>
-      <p id="countTeachers">0</p>
-    </div>
+<div class="dash-card" onclick="openPage('teachersPage')">
+  👨‍🏫<br>
+  <b>Enseignants</b>
+  <p id="countTeachers">0</p>
+</div>
 
     <!-- NOTES -->
     <div class="dash-card" onclick="openPage('notesPage')">
@@ -1130,23 +1145,68 @@ Retour
 <!-- ===== ÉLÈVES ===== -->
 <div id="studentsPage" class="page">
 
-  <h2>🎓 Gestion des élèves</h2>
+<h2>🎓 Gestion des élèves</h2>
 
-  <!-- AJOUT -->
-  <div style="background:#111b21;padding:15px;border-radius:12px;margin-bottom:10px;">
+<div style="
+background:#111b21;
+padding:15px;
+border-radius:12px;
+margin-bottom:10px;
+">
 
-    <input id="stuName" placeholder="Nom élève">
-    <input id="stuClasse" placeholder="Classe">
+<input id="stuName" placeholder="Nom complet">
+<input id="stuClasse" placeholder="Classe">
+<input id="stuGender" placeholder="Sexe">
+<input id="stuBirth" type="date">
+<input id="stuPhone" placeholder="Téléphone élève">
+<input id="stuAddress" placeholder="Adresse">
 
-    <button onclick="addStudent()">➕ Ajouter élève</button>
+<h3>👨‍👩‍👧 Parent / Tuteur</h3>
+
+<input id="parentName" placeholder="Nom parent">
+<input id="parentPhone" placeholder="Téléphone parent">
+<input id="parentJob" placeholder="Profession parent">
+
+<button onclick="addStudent()">
+➕ Ajouter élève
+</button>
+
+</div>
+
+<input id="searchStudent"
+placeholder="Rechercher..."
+oninput="renderStudents()">
+
+<div id="studentsTable"></div>
+
+<button onclick="back()">⬅ Retour</button>
+
+</div>
+<!-- ===== ENSEIGNANTS ===== -->
+<div id="teachersPage" class="page">
+
+  <h2>👨‍🏫 Gestion Enseignants</h2>
+
+  <div style="
+    background:#111b21;
+    padding:15px;
+    border-radius:12px;
+    margin-bottom:10px;
+  ">
+
+    <input id="teacherName" placeholder="Nom complet">
+    <input id="teacherPhone" placeholder="Téléphone">
+    <input id="teacherEmail" placeholder="Email">
+    <input id="teacherCours" placeholder="Cours enseigné">
+    <input id="teacherClasse" placeholder="Classe">
+
+    <button onclick="addTeacher()">
+      ➕ Ajouter enseignant
+    </button>
 
   </div>
 
-  <!-- RECHERCHE -->
-  <input id="searchStudent" placeholder="Rechercher..." oninput="renderStudents()">
-
-  <!-- TABLEAU -->
-  <div id="studentsTable"></div>
+  <div id="teachersTable"></div>
 
   <button onclick="back()">⬅ Retour</button>
 
@@ -1222,12 +1282,13 @@ let editFicheId = null;
 let currentSchool = null;
 let navMode = "app"; // "app" ou "school"
 let qrScanner = null;
+let isSchoolAdmin = false;
 
 
 
 function openSchool(schoolId){
   if(!schoolId){
-    alert("École introuvable");
+    showMessage("École introuvable");
     return;
   }
 
@@ -1242,7 +1303,7 @@ function startQRScanner(){
   const reader = document.getElementById("qr-reader");
 
   if(!reader){
-    alert("qr-reader introuvable");
+    showMessage("qr-reader introuvable");
     return;
   }
 
@@ -1273,7 +1334,7 @@ function startQRScanner(){
   .catch(err => {
 
     console.log(err);
-    alert("Erreur caméra");
+    showMessage("Erreur caméra");
 
   });
 
@@ -1295,7 +1356,7 @@ function handleQRScan(data){
 
     // ⏱️ expiration
     if(Date.now() > qr.expireAt){
-      alert("❌ QR expiré");
+      showMessage("❌ QR expiré");
       return;
     }
 
@@ -1316,7 +1377,7 @@ function handleQRScan(data){
       });
 
       if(already){
-        alert("⚠️ QR déjà utilisé");
+        showMessage("⚠️ QR déjà utilisé");
         return;
       }
 
@@ -1331,7 +1392,7 @@ function handleQRScan(data){
 
       });
 
-      alert("📩 Demande envoyée");
+      showMessage("📩 Demande envoyée");
 
       stopQRScanner();
 
@@ -1339,7 +1400,7 @@ function handleQRScan(data){
 
   }catch(e){
 
-    alert("QR invalide");
+    showMessage("QR invalide");
 
   }
 
@@ -1390,7 +1451,7 @@ function listenJoinRequests(){
           status:"approved"
         });
 
-        alert("✅ Utilisateur accepté");
+        showMessage("✅ Utilisateur accepté");
 
       }else{
 
@@ -1398,7 +1459,7 @@ function listenJoinRequests(){
           status:"rejected"
         });
 
-        alert("❌ Refusé");
+        showMessage("❌ Refusé");
 
       }
 
@@ -1417,15 +1478,20 @@ function go(page){
   
 function back(){
 
-  // 🔥 si on est dans une école
-  if(navMode === "school"){
+  // 🔥 si on est dans une page école
+  if(currentSchool){
+
     go("schoolDashboard");
+
+    // recharge dashboard école
     loadSchoolDashboard(currentSchool);
+
     return;
   }
 
   // 🔥 sinon retour app normale
   go("dashboard");
+
 }
   
 // ================= INSCRIPTION =================  
@@ -1448,7 +1514,7 @@ function register(){
       photo  
     });  
   
-    alert("Compte créé !");  
+    showMessage("Compte créé !");  
     go("login");  
   });  
 }  
@@ -1469,10 +1535,10 @@ function login(){
   .then(user => {  
     loadUser(user.user.uid);  
   })  
-  .catch(err => {  
-    document.getElementById("loginError").innerText = err.message;  
-    console.log("LOGIN ERROR:", err);  
-  });  
+  .catch(err => {
+  console.log(err); // garde pour debug
+  showMessage(formatError(err)); // propre utilisateur
+});
 }  
   
 // ================= CHARGER USER =================  
@@ -1493,6 +1559,12 @@ function loadUser(uid){
     } else {  
       document.getElementById("teacherBox").style.display = "block";  
     }  
+    if(data.role === "admin"){
+  isSchoolAdmin = true;
+}
+else{
+  isSchoolAdmin = false;
+}
   
     loadUsers(); // 👈 AJOUT CHAT  
     go("dashboard");  
@@ -1905,7 +1977,7 @@ document.getElementById("fabBtn").classList.remove("active");
       members  
     });  
   
-    alert("Groupe créé !");  
+    showMessage("Groupe créé !");  
   });  
 }  
     
@@ -2035,7 +2107,7 @@ function saveFiche(){
 
     db.ref("fiches/" + currentUser + "/" + id).set(data);
 
-    alert("Fiche enregistrée ✅");
+    showMessage("Fiche enregistrée ✅");
 
     editFicheId = null;
     clearForm();
@@ -2085,7 +2157,7 @@ function editFiche(id){
   
     editFicheId = id;  
   
-    alert("Modification en cours...");  
+    showMessage("Modification en cours...");  
   });  
 }  
   
@@ -2484,7 +2556,7 @@ function addStatus(){
 
         });
 
-        alert("Statut publié ✅");
+        showMessage("Statut publié ✅");
 
       });
 
@@ -2531,7 +2603,7 @@ function saveProfile(){
     status
   });
 
-  alert("Profil mis à jour ✅");
+  showMessage("Profil mis à jour ✅");
 
 }   
     
@@ -2647,7 +2719,7 @@ window.addEventListener("DOMContentLoaded", () => {
         });
       }
 
-      alert("Photo mise à jour ✅");
+      showMessage("Photo mise à jour ✅");
     };
 
     reader.readAsDataURL(file);
@@ -2660,7 +2732,7 @@ function createSchool(){
   let name = document.getElementById("schoolName").value;
   let desc = document.getElementById("schoolDesc").value;
 
-  if(!name) return alert("Nom requis");
+  if(!name) return showMessage("Nom requis");
 
   let schoolId = "school_" + Date.now();
 
@@ -2691,15 +2763,31 @@ function createSchool(){
   go("schoolDashboard");
   loadSchoolDashboard(schoolId);
 }
+function checkAdminRole(){
+
+  let user = firebase.auth().currentUser;
+  if(!user) return;
+
+  db.ref("schools/" + currentSchool + "/admins/" + user.uid)
+  .once("value")
+  .then(snap => {
+
+    isSchoolAdmin = snap.exists(); // true = admin école
+
+  });
+
+}
+
 // ================= CHARGER DASHBOARD ECOLE =================
 function loadSchoolDashboard(schoolId){
 
   currentSchool = schoolId;
+  checkAdminRole();
 
   checkSchoolAccess().then(isAllowed => {
 
     if (!isAllowed) {
-      alert("Accès refusé");
+      showMessage("Accès refusé");
       return;
     }
 
@@ -2837,35 +2925,64 @@ function loadStudents(){
 
 }
 function addStudent(){
+   if(!isSchoolAdmin){
+  showMessage("❌ Accès refusé");
+  return;
+} 
 
   if(!currentSchool){
-    alert("❌ Aucune école sélectionnée");
+    showMessage("❌ Aucune école");
     return;
   }
 
   let name = document.getElementById("stuName").value;
   let classe = document.getElementById("stuClasse").value;
+  let gender = document.getElementById("stuGender").value;
+  let birth = document.getElementById("stuBirth").value;
+  let phone = document.getElementById("stuPhone").value;
+  let address = document.getElementById("stuAddress").value;
+
+  let parentName = document.getElementById("parentName").value;
+  let parentPhone = document.getElementById("parentPhone").value;
+  let parentJob = document.getElementById("parentJob").value;
 
   if(!name || !classe){
-    alert("Remplis tous les champs");
+    showMessage("Remplis les champs");
     return;
   }
 
   let id = "stu_" + Date.now();
-  let matricule = "EL-" + Math.floor(100000 + Math.random()*900000);
 
-  db.ref("schools/" + currentSchool + "/students/" + id).set({
+  let matricule =
+  "EL-" + Math.floor(100000 + Math.random()*900000);
+
+  db.ref("schools/" + currentSchool + "/students/" + id)
+  .set({
+
     name,
     classe,
+    gender,
+    birth,
+    phone,
+    address,
+
+    parent:{
+      name: parentName,
+      phone: parentPhone,
+      job: parentJob
+    },
+
     matricule,
     createdAt: Date.now()
+
   });
 
-  document.getElementById("stuName").value = "";
-  document.getElementById("stuClasse").value = "";
+  showMessage("✅ Élève ajouté");
 
   renderStudents();
+
 }
+
 function searchStudents(){
 
   let text = document.getElementById("searchStudent").value.toLowerCase();
@@ -2913,23 +3030,35 @@ function openPage(page){
 
   document.getElementById(page).classList.add("active");
 
-  // 🔥 scanner auto si paramètres
+  // 🔥 caméra QR paramètres
   if(page === "settingsPage"){
     setTimeout(() => {
       startQRScanner();
     }, 500);
   }
 
+  // 💬 chat
   if(page === "chat"){
     loadContacts();
   }
 
+  // 🎓 élèves
+  if(page === "studentsPage"){
+    renderStudents();
+  }
+
+  // 👨‍🏫 enseignants
+  if(page === "teachersPage"){
+    renderTeachers();
+  }
+
 }
+
 function checkSchoolAccess() {
 
   return new Promise((resolve) => {
 
-    let user = firebase.auth().currentUser;
+    let user = auth.currentUser;
     if (!user) return resolve(false);
 
     db.ref("users/" + user.uid).once("value")
@@ -2949,13 +3078,7 @@ function checkSchoolAccess() {
 
   });
 
-}
-function openSchool(schoolId) {
 
-  if (!schoolId) {
-    console.error("schoolId manquant");
-    return;
-  }
 
   loadSchoolDashboard(schoolId);
 
@@ -2966,12 +3089,9 @@ function renderStudents(){
   let box = document.getElementById("studentsTable");
   box.innerHTML = "";
 
-  if(!currentSchool){
-    box.innerHTML = "❌ École non sélectionnée";
-    return;
-  }
-
-  let search = document.getElementById("searchStudent")?.value?.toLowerCase() || "";
+  let search =
+  document.getElementById("searchStudent")
+  ?.value?.toLowerCase() || "";
 
   db.ref("schools/" + currentSchool + "/students")
   .once("value")
@@ -2994,27 +3114,217 @@ function renderStudents(){
         let div = document.createElement("div");
 
         div.style.background = "#111b21";
+        div.style.padding = "12px";
         div.style.margin = "10px 0";
-        div.style.padding = "10px";
-        div.style.borderRadius = "10px";
+        div.style.borderRadius = "12px";
+
+        let adminButtons = "";
+
+        if(isSchoolAdmin){
+          adminButtons = `
+            <button onclick="editStudent('${s.key}')">✏️</button>
+            <button onclick="deleteStudent('${s.key}')">🗑</button>
+            <button onclick="generateQR('${s.key}')">📱 QR</button>
+          `;
+        }
 
         div.innerHTML = `
-          <b>👤 ${d.name}</b><br>
+          <b>🎓 ${d.name}</b><br>
           📚 Classe: ${d.classe}<br>
           🆔 Matricule: ${d.matricule}<br>
 
-          <button onclick="editStudent('${s.key}')">✏️</button>
-          <button onclick="deleteStudent('${s.key}')">🗑</button>
-          <button onclick="generateQR('${s.key}')">📱 QR</button>
+          ${adminButtons}
         `;
 
         box.appendChild(div);
+
       }
 
     });
 
   });
+
 }
+
+function addTeacher(){
+
+  let name = document.getElementById("teacherName").value;
+  let phone = document.getElementById("teacherPhone").value;
+  let email = document.getElementById("teacherEmail").value;
+  let cours = document.getElementById("teacherCours").value;
+  let classe = document.getElementById("teacherClasse").value;
+
+  if(!name){
+    showMessage("Nom requis");
+    return;
+  }
+
+  let id = "teacher_" + Date.now();
+
+  db.ref("schools/" + currentSchool + "/teachers/" + id)
+  .set({
+
+    name,
+    phone,
+    email,
+    cours,
+    classe,
+    createdAt: Date.now()
+
+  });
+
+  showMessage("✅ Enseignant ajouté");
+
+  renderTeachers();
+
+}
+function renderTeachers(){
+
+  let box = document.getElementById("teachersTable");
+  box.innerHTML = "";
+
+  db.ref("schools/" + currentSchool + "/teachers")
+  .once("value")
+  .then(snap => {
+
+    if(!snap.exists()){
+      box.innerHTML = "Aucun enseignant";
+      return;
+    }
+
+    snap.forEach(t => {
+
+      let d = t.val();
+
+      let div = document.createElement("div");
+
+      div.style.background = "#111b21";
+      div.style.padding = "12px";
+      div.style.margin = "10px 0";
+      div.style.borderRadius = "12px";
+
+      div.innerHTML = `
+        <b>👨‍🏫 ${d.name}</b><br>
+        📚 ${d.cours || ""}<br>
+        🏫 ${d.classe || ""}<br>
+        📞 ${d.phone || ""}<br>
+        ✉️ ${d.email || ""}<br><br>
+
+        <button onclick="editTeacher('${t.key}')">✏️</button>
+        <button onclick="deleteTeacher('${t.key}')">🗑</button>
+        <button onclick="generateTeacherQR('${t.key}')">📱 QR</button>
+      `;
+
+      box.appendChild(div);
+
+    });
+
+  });
+
+}
+function editTeacher(id){
+
+  db.ref("schools/" + currentSchool + "/teachers/" + id)
+  .once("value")
+  .then(snap => {
+
+    let d = snap.val();
+
+    let name = prompt("Nom", d.name);
+    let phone = prompt("Téléphone", d.phone);
+    let email = prompt("Email", d.email);
+    let cours = prompt("Cours", d.cours);
+    let classe = prompt("Classe", d.classe);
+
+    db.ref("schools/" + currentSchool + "/teachers/" + id)
+    .update({
+      name,
+      phone,
+      email,
+      cours,
+      classe
+    });
+
+    renderTeachers();
+
+  });
+
+}
+function deleteTeacher(id){
+
+  if(confirm("Supprimer cet enseignant ?")){
+
+    db.ref("schools/" + currentSchool + "/teachers/" + id)
+    .remove();
+
+    renderTeachers();
+
+  }
+
+}
+function generateTeacherQR(id){
+
+  let data = {
+    schoolId: currentSchool,
+    teacherId: id,
+    type: "teacher",
+    expireAt: Date.now() + (3 * 60 * 1000)
+  };
+
+  let textQR = JSON.stringify(data);
+
+  let win = window.open("", "", "width=300,height=350");
+
+  win.document.write(`
+    <h3 style="text-align:center;">QR Enseignant</h3>
+    <div id="qrcode" style="display:flex;justify-content:center;"></div>
+  `);
+
+  win.document.close();
+
+  setTimeout(() => {
+    new QRCode(win.document.getElementById("qrcode"), {
+      text: textQR,
+      width: 200,
+      height: 200
+    });
+  }, 300);
+
+}
+function formatError(err){
+
+  let msg = err.message || "";
+
+  // 🔥 Auth errors
+  if(msg.includes("auth/invalid-credential")){
+    return "Identifiants incorrects ou expirés.";
+  }
+
+  if(msg.includes("auth/user-not-found")){
+    return "Aucun compte trouvé avec cet email.";
+  }
+
+  if(msg.includes("auth/wrong-password")){
+    return "Mot de passe incorrect.";
+  }
+
+  if(msg.includes("auth/email-already-in-use")){
+    return "Cet email est déjà utilisé.";
+  }
+
+  // 🔥 GitHub / fetch / réseau
+  if(msg.includes("Failed to fetch")){
+    return "Problème de connexion Internet.";
+  }
+
+  if(msg.includes("Network Error")){
+    return "Erreur réseau, vérifie ta connexion.";
+  }
+
+  // 🔥 défaut
+  return "Une erreur est survenue. Réessaie.";
+}
+
 function editStudent(id){
 
   let newName = prompt("Nouveau nom ?");
@@ -3090,7 +3400,7 @@ function openStudent(studentId){
 
     let s = snap.val();
 
-    alert(
+    showMessage(
       "🎓 " + s.name +
       "\nClasse: " + s.classe +
       "\nMatricule: " + s.matricule
@@ -3110,6 +3420,40 @@ function openSchool(schoolId){
   go("schoolDashboard");
   loadSchoolDashboard(schoolId);
 }
+function showMessage(msg){
+
+  // enlever mots techniques inutiles
+  msg = msg
+    .replace(/firebase/gi, "")
+    .replace(/file:\/\/\/|https?:\/\/|github\.com/gi, "")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  let box = document.getElementById("appToast");
+
+  box.innerText = msg;
+  box.style.display = "block";
+
+  clearTimeout(window.toastTimer);
+
+  window.toastTimer = setTimeout(() => {
+    box.style.display = "none";
+  }, 3000);
+
+}
+function getUserRole(){
+  let user = firebase.auth().currentUser;
+  if(!user) return null;
+
+  return db.ref("users/" + user.uid)
+    .once("value")
+    .then(snap => snap.val()?.role || null);
+}
+async function isAdmin(){
+  let role = await getUserRole();
+  return role === "admin";
+}
+
 
 
 
