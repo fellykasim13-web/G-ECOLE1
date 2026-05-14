@@ -1250,38 +1250,30 @@ function startQRScanner(){
 
   qrScanner = new Html5Qrcode("qr-reader");
 
-  Html5Qrcode.getCameras()
-  .then(devices => {
+  qrScanner.start(
 
-    if(devices.length === 0){
-      alert("Aucune caméra trouvée");
-      return;
+    { facingMode: "environment" }, // 🔥 caméra arrière
+
+    {
+      fps: 10,
+      qrbox: 250
+    },
+
+    function(decodedText){
+
+      handleQRScan(decodedText);
+
+    },
+
+    function(error){
+      // ignore erreurs
     }
 
-    qrScanner.start(
-      devices[0].id,
-      {
-        fps: 10,
-        qrbox: 250
-      },
-
-      function(decodedText){
-
-        handleQRScan(decodedText);
-
-      },
-
-      function(error){
-        // ignore erreurs scan
-      }
-
-    );
-
-  })
+  )
   .catch(err => {
 
     console.log(err);
-    alert("Permission caméra refusée");
+    alert("Erreur caméra");
 
   });
 
@@ -1301,59 +1293,112 @@ function handleQRScan(data){
 
     let qr = JSON.parse(data);
 
-    // ❌ EXPIRATION 3 MIN
+    // ⏱️ expiration
     if(Date.now() > qr.expireAt){
       alert("❌ QR expiré");
       return;
     }
 
-    // 🔥 créer demande d'adhésion admin
-    db.ref("schools/" + qr.schoolId + "/joinRequests").push({
+    db.ref("schools/" + qr.schoolId + "/joinRequests")
+    .once("value")
+    .then(snap => {
 
-      studentId: qr.studentId,
-      linkCode: qr.linkCode,
-      time: Date.now(),
-      status: "pending"
+      let already = false;
+
+      snap.forEach(r => {
+
+        let d = r.val();
+
+        if(d.linkCode === qr.linkCode){
+          already = true;
+        }
+
+      });
+
+      if(already){
+        alert("⚠️ QR déjà utilisé");
+        return;
+      }
+
+      // ✅ demande admin
+      db.ref("schools/" + qr.schoolId + "/joinRequests")
+      .push({
+
+        userId: currentUser,
+        linkCode: qr.linkCode,
+        time: Date.now(),
+        status: "pending"
+
+      });
+
+      alert("📩 Demande envoyée");
+
+      stopQRScanner();
 
     });
 
-    alert("📩 Demande envoyée à l'administrateur");
-
-    stopQRScanner();
-
   }catch(e){
+
     alert("QR invalide");
+
   }
 
 }
 function listenJoinRequests(){
 
   db.ref("schools/" + currentSchool + "/joinRequests")
-  .on("value", snap => {
+  .on("child_added", snap => {
 
-    snap.forEach(req => {
+    let r = snap.val();
 
-      let r = req.val();
+    if(!r) return;
 
-      if(r.status === "pending"){
+    if(r.status !== "pending") return;
 
-        if(confirm(
-          "👤 Un élève veut rejoindre l'école\n\n" +
-          "Valider ?"
-        )){
+    if(!r.userId){
+      console.log("userId manquant");
+      return;
+    }
 
-          db.ref("schools/" + currentSchool + "/students/" + r.studentId)
-          .update({
-            approved: true
-          });
+    db.ref("users/" + r.userId)
+    .once("value")
+    .then(userSnap => {
 
-          req.ref.update({status:"approved"});
+      let u = userSnap.val();
 
-        } else {
+      if(!u){
+        console.log("Utilisateur introuvable");
+        return;
+      }
 
-          req.ref.update({status:"rejected"});
+      let ok = confirm(
+        "👤 " + u.name +
+        " veut rejoindre l'école.\n\nValider ?"
+      );
 
-        }
+      if(ok){
+
+        db.ref("users/" + r.userId + "/schools/" + currentSchool)
+        .set({
+          joinedAt: Date.now()
+        });
+
+        db.ref("schools/" + currentSchool + "/members/" + r.userId)
+        .set(true);
+
+        snap.ref.update({
+          status:"approved"
+        });
+
+        alert("✅ Utilisateur accepté");
+
+      }else{
+
+        snap.ref.update({
+          status:"rejected"
+        });
+
+        alert("❌ Refusé");
 
       }
 
@@ -2651,17 +2696,20 @@ function loadSchoolDashboard(schoolId){
 
   currentSchool = schoolId;
 
-  // 🔐 vérifier accès AVANT de charger
-  checkSchoolAccess(currentSchool).then(isAllowed => {
+  checkSchoolAccess().then(isAllowed => {
 
     if (!isAllowed) {
       alert("Accès refusé");
       return;
     }
 
-    // ✅ SI autorisé → charger dashboard
+    go("schoolDashboard");
 
-    db.ref("schools/" + schoolId + "/info").once("value")
+    // ✅ écouter demandes QR
+    listenJoinRequests();
+
+    db.ref("schools/" + schoolId + "/info")
+    .once("value")
     .then(snap => {
 
       let info = snap.val();
@@ -2671,25 +2719,21 @@ function loadSchoolDashboard(schoolId){
 
     });
 
-    // COUNT ÉLÈVES
     db.ref("schools/" + schoolId + "/students")
     .on("value", snap => {
       document.getElementById("countStudents").innerText = snap.numChildren();
     });
 
-    // COUNT ENSEIGNANTS
     db.ref("schools/" + schoolId + "/teachers")
     .on("value", snap => {
       document.getElementById("countTeachers").innerText = snap.numChildren();
     });
 
-    // COUNT NOTES
     db.ref("schools/" + schoolId + "/notes")
     .on("value", snap => {
       document.getElementById("countNotes").innerText = snap.numChildren();
     });
 
-    // COUNT COURS
     db.ref("schools/" + schoolId + "/courses")
     .on("value", snap => {
       document.getElementById("countCourses").innerText = snap.numChildren();
